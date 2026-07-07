@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Mono, Plus_Jakarta_Sans } from "next/font/google";
+import { getServerSession } from "next-auth/next";
 
+import { authOptions } from "@/auth";
 import { AppProviders } from "@/components/providers/app-providers";
 import { SiteShell } from "@/components/layout/site-shell";
 import { siteConfig } from "@/config/site";
@@ -26,15 +28,17 @@ export const metadata: Metadata = {
   description: siteConfig.description,
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await getServerSession(authOptions);
+
   return (
     <html lang="en" className={`${plusJakartaSans.variable} ${ibmPlexMono.variable} h-full antialiased`} suppressHydrationWarning>
       <body className="min-h-full bg-background text-foreground">
-        <AppProviders>
+        <AppProviders session={session}>
           <SiteShell>{children}</SiteShell>
         </AppProviders>
       </body>

@@ -3,14 +3,18 @@
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
+import { useSession, signOut } from "next-auth/react";
 
 import { ThemeToggle } from "@/components/layout/theme-toggle";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { siteConfig } from "@/config/site";
 
 export function SiteHeader() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { data: session, status } = useSession();
+  const isAuthenticated = status === "authenticated" && Boolean(session);
 
   return (
     <header className="sticky top-0 z-40 border-b border-border/50 bg-background/85 backdrop-blur-xl">
@@ -39,9 +43,28 @@ export function SiteHeader() {
 
         <div className="hidden items-center gap-3 lg:flex">
           <ThemeToggle />
-          <Button asChild variant="outline">
-            <Link href="/api/auth/signin">Sign in</Link>
-          </Button>
+          {isAuthenticated ? (
+            <>
+              <Badge variant="outline" className="capitalize">
+                {session?.user?.role ?? "customer"}
+              </Badge>
+              <Button asChild variant="outline">
+                <Link href="/dashboard">Dashboard</Link>
+              </Button>
+              <Button type="button" onClick={() => signOut({ callbackUrl: "/" })}>
+                Logout
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button asChild variant="outline">
+                <Link href="/login">Sign in</Link>
+              </Button>
+              <Button asChild variant="outline">
+                <Link href="/register">Create account</Link>
+              </Button>
+            </>
+          )}
           <Button asChild>
             <Link href="#pricing">List your restaurant</Link>
           </Button>
@@ -78,10 +101,54 @@ export function SiteHeader() {
               {item.label}
             </Link>
           ))}
+          {isAuthenticated ? (
+            <>
+              <Link
+                href="/dashboard"
+                className="rounded-2xl px-4 py-3 text-sm font-medium text-foreground transition-colors hover:bg-accent"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Dashboard
+              </Link>
+              <button
+                type="button"
+                className="rounded-2xl px-4 py-3 text-left text-sm font-medium text-foreground transition-colors hover:bg-accent"
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  signOut({ callbackUrl: "/" });
+                }}
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <Link
+                href="/login"
+                className="rounded-2xl px-4 py-3 text-sm font-medium text-foreground transition-colors hover:bg-accent"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Sign in
+              </Link>
+              <Link
+                href="/register"
+                className="rounded-2xl px-4 py-3 text-sm font-medium text-foreground transition-colors hover:bg-accent"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Create account
+              </Link>
+            </>
+          )}
           <div className="flex gap-3 px-1 pt-2">
-            <Button asChild variant="outline" className="flex-1">
-              <Link href="/api/auth/signin">Sign in</Link>
-            </Button>
+            {isAuthenticated ? (
+              <Button type="button" variant="outline" className="flex-1" onClick={() => signOut({ callbackUrl: "/" })}>
+                Logout
+              </Button>
+            ) : (
+              <Button asChild variant="outline" className="flex-1">
+                <Link href="/login">Sign in</Link>
+              </Button>
+            )}
             <Button asChild className="flex-1">
               <Link href="#pricing">List your restaurant</Link>
             </Button>

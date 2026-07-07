@@ -199,13 +199,13 @@ export default function Home() {
           </CardHeader>
           <CardContent className="flex flex-col gap-3 sm:flex-row">
             <Button asChild>
-              <Link href="/api/auth/signin">
+              <Link href="/login">
                 Configure Auth.js
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </Button>
             <Button asChild variant="outline">
-              <Link href="/restaurants">Open restaurant directory</Link>
+              <Link href="/register">Create account</Link>
             </Button>
           </CardContent>
         </Card>

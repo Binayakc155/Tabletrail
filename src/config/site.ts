@@ -11,8 +11,8 @@ export const siteConfig = {
   footerLinks: [
     { label: "Restaurants", href: "#explore" },
     { label: "List your venue", href: "#pricing" },
-    { label: "Auth.js", href: "/api/auth/signin" },
-    { label: "GitHub", href: "https://github.com" },
+    { label: "Login", href: "/login" },
+    { label: "Create account", href: "/register" },
   ],
   highlights: [
     "Curated restaurant listings",
