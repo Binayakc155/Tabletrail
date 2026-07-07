@@ -5,50 +5,59 @@ import { hashPassword } from "@/lib/password";
 import { signUpSchema } from "@/lib/validators/auth";
 
 export async function POST(request: Request) {
-  const body = await request.json();
-  const parsed = signUpSchema.safeParse(body);
+  try {
+    const body = await request.json();
+    const parsed = signUpSchema.safeParse(body);
 
-  if (!parsed.success) {
+    if (!parsed.success) {
+      return NextResponse.json(
+        {
+          message: parsed.error.issues[0]?.message ?? "Invalid sign up data.",
+        },
+        { status: 400 }
+      );
+    }
+
+    const { email, name, password, role } = parsed.data;
+
+    const existingUser = await prisma.user.findUnique({
+      where: {
+        email,
+      },
+    });
+
+    if (existingUser) {
+      return NextResponse.json(
+        {
+          message: "An account with this email already exists.",
+        },
+        { status: 409 }
+      );
+    }
+
+    const passwordHash = await hashPassword(password);
+
+    await prisma.user.create({
+      data: {
+        email,
+        name,
+        role,
+        passwordHash,
+      },
+    });
+
     return NextResponse.json(
       {
-        message: parsed.error.issues[0]?.message ?? "Invalid sign up data.",
+        message: "Account created successfully.",
       },
-      { status: 400 }
+      { status: 201 }
     );
-  }
-
-  const { email, name, password, role } = parsed.data;
-
-  const existingUser = await prisma.user.findUnique({
-    where: {
-      email,
-    },
-  });
-
-  if (existingUser) {
+  } catch {
     return NextResponse.json(
       {
-        message: "An account with this email already exists.",
+        message: "Unable to create your account right now.",
       },
-      { status: 409 }
+      { status: 500 }
     );
   }
-
-  const passwordHash = await hashPassword(password);
-
-  await prisma.user.create({
-    data: {
-      email,
-      name,
-      role,
-      passwordHash,
-    },
-  });
-
-  return NextResponse.json(
-    {
-      message: "Account created successfully.",
-    },
-    { status: 201 }
-  );
 }

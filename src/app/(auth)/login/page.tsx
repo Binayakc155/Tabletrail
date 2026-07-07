@@ -5,6 +5,7 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/auth";
 import { AuthPageShell } from "@/components/auth/auth-page-shell";
 import { LoginForm } from "@/components/auth/login-form";
+import { env } from "@/lib/env";
 import { siteConfig } from "@/config/site";
 
 export const metadata: Metadata = {
@@ -15,11 +16,12 @@ export const metadata: Metadata = {
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams?: {
+  searchParams?: Promise<{
     callbackUrl?: string;
-  };
+  }>;
 }) {
   const session = await getServerSession(authOptions);
+  const resolvedSearchParams = await searchParams;
 
   if (session) {
     redirect("/dashboard");
@@ -38,7 +40,7 @@ export default async function LoginPage({
       formTitle="Sign in"
       formDescription="Use your email and password or connect with Google if that provider is configured in your environment."
     >
-      <LoginForm callbackUrl={searchParams?.callbackUrl ?? "/dashboard"} enableGoogleLogin={process.env.NEXT_PUBLIC_ENABLE_GOOGLE_LOGIN === "true"} />
+      <LoginForm callbackUrl={resolvedSearchParams?.callbackUrl ?? "/dashboard"} enableGoogleLogin={env.googleLoginEnabled} />
     </AuthPageShell>
   );
 }

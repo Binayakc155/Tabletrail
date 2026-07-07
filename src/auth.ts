@@ -8,14 +8,18 @@ import GitHub from "next-auth/providers/github";
 
 import { prisma } from "@/lib/prisma";
 import type { UserRole } from "@/lib/auth-roles";
+import { env } from "@/lib/env";
 import { signInSchema } from "@/lib/validators/auth";
+
+process.env.NEXTAUTH_URL ??= env.authUrl;
+process.env.NEXTAUTH_SECRET ??= env.authSecret;
 
 export const authOptions: AuthOptions = {
   adapter: PrismaAdapter(prisma),
   session: {
     strategy: "jwt",
   },
-  secret: process.env.AUTH_SECRET,
+  secret: env.authSecret,
   providers: [
     Credentials({
       name: "Email and password",

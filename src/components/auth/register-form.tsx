@@ -42,7 +42,16 @@ export function RegisterForm({ callbackUrl }: { callbackUrl: string }) {
         body: JSON.stringify(values),
       });
 
-      const payload = (await response.json()) as { message?: string };
+      const responseText = await response.text();
+      let payload: { message?: string } = {};
+
+      if (responseText) {
+        try {
+          payload = JSON.parse(responseText) as { message?: string };
+        } catch {
+          payload = {};
+        }
+      }
 
       if (!response.ok) {
         setServerError(payload.message ?? "Unable to create your account.");
