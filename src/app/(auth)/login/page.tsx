@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
+import { SignIn } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
-import { getServerSession } from "next-auth/next";
+import { auth } from "@clerk/nextjs/server";
 
-import { authOptions } from "@/auth";
 import { AuthPageShell } from "@/components/auth/auth-page-shell";
-import { LoginForm } from "@/components/auth/login-form";
-import { env } from "@/lib/env";
 import { siteConfig } from "@/config/site";
 
 export const metadata: Metadata = {
@@ -20,10 +18,11 @@ export default async function LoginPage({
     callbackUrl?: string;
   }>;
 }) {
-  const session = await getServerSession(authOptions);
+  const { userId } = await auth();
   const resolvedSearchParams = await searchParams;
+  const fallbackRedirectUrl = resolvedSearchParams?.callbackUrl ?? "/dashboard";
 
-  if (session) {
+  if (userId) {
     redirect("/dashboard");
   }
 
@@ -35,12 +34,12 @@ export default async function LoginPage({
       highlights={[
         "Resume saved sessions instantly",
         "Manage your restaurant or customer profile",
-        "Optional Google sign-in when configured",
+        "Use the providers configured in Clerk",
       ]}
       formTitle="Sign in"
-      formDescription="Use your email and password or connect with Google if that provider is configured in your environment."
+      formDescription="Use your Clerk account to continue into TableTrail."
     >
-      <LoginForm callbackUrl={resolvedSearchParams?.callbackUrl ?? "/dashboard"} enableGoogleLogin={env.googleLoginEnabled} />
+      <SignIn signUpUrl="/register" fallbackRedirectUrl={fallbackRedirectUrl} />
     </AuthPageShell>
   );
 }

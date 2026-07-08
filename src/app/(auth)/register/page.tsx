@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
+import { SignUp } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
-import { getServerSession } from "next-auth/next";
+import { auth } from "@clerk/nextjs/server";
 
-import { authOptions } from "@/auth";
 import { AuthPageShell } from "@/components/auth/auth-page-shell";
-import { RegisterForm } from "@/components/auth/register-form";
 import { siteConfig } from "@/config/site";
 
 export const metadata: Metadata = {
@@ -13,9 +12,9 @@ export const metadata: Metadata = {
 };
 
 export default async function RegisterPage() {
-  const session = await getServerSession(authOptions);
+  const { userId } = await auth();
 
-  if (session) {
+  if (userId) {
     redirect("/dashboard");
   }
 
@@ -23,16 +22,16 @@ export default async function RegisterPage() {
     <AuthPageShell
       badge="Start here"
       title="Create your TableTrail account"
-      description="Choose a customer or restaurant owner profile, verify your email address, and keep access secure with hashed passwords."
+      description="Create a secure Clerk account for your TableTrail dashboard, saved restaurants, and management tools."
       highlights={[
-        "Role-aware sign-up flow",
-        "Password hashing with bcrypt",
+        "Hosted Clerk sign-up flow",
+        "Secure sessions without local password storage",
         "Ready for customer or owner onboarding",
       ]}
       formTitle="Create account"
-      formDescription="This scaffold keeps the public sign-up flow separate from the protected dashboard and admin routes."
+      formDescription="New accounts start as customers. Set publicMetadata.role in Clerk to restaurant_owner or admin when needed."
     >
-      <RegisterForm callbackUrl="/dashboard" />
+      <SignUp signInUrl="/login" fallbackRedirectUrl="/dashboard" />
     </AuthPageShell>
   );
 }

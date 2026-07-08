@@ -1,20 +1,20 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { getServerSession } from "next-auth/next";
 
-import { authOptions } from "@/auth";
+import { ensureLocalUser, getCurrentAppUser } from "@/lib/clerk-auth";
 import { deleteOwnerRestaurant, getOwnerRestaurant } from "@/lib/restaurant-management";
 import { isOwnerOrAdmin } from "@/lib/auth-roles";
 
 export async function DELETE(_: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const session = await getServerSession(authOptions);
+  const user = await getCurrentAppUser();
 
-  if (!session?.user?.id || !isOwnerOrAdmin(session.user.role)) {
+  if (!user || !isOwnerOrAdmin(user.role)) {
     return NextResponse.json({ message: "Unauthorized." }, { status: 401 });
   }
 
-  const restaurant = await getOwnerRestaurant(session.user.id, id);
+  await ensureLocalUser(user);
+  const restaurant = await getOwnerRestaurant(user.id, id);
 
   if (!restaurant) {
     return NextResponse.json({ message: "Not found." }, { status: 404 });

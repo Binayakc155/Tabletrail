@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { getServerSession } from "next-auth/next";
 
-import { authOptions } from "@/auth";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { siteConfig } from "@/config/site";
+import { requireAppUser } from "@/lib/clerk-auth";
 
 export const metadata: Metadata = {
   title: `Admin console | ${siteConfig.name}`,
@@ -13,9 +12,9 @@ export const metadata: Metadata = {
 };
 
 export default async function AdminPage() {
-  const session = await getServerSession(authOptions);
+  const user = await requireAppUser();
 
-  if (session?.user?.role !== "admin") {
+  if (user.role !== "admin") {
     redirect("/dashboard?error=forbidden");
   }
 
@@ -37,7 +36,7 @@ export default async function AdminPage() {
           <CardDescription>Only users with the admin role can reach this page.</CardDescription>
         </CardHeader>
         <CardContent className="text-sm text-muted-foreground">
-          Signed in as {session?.user?.email ?? "an admin user"}.
+          Signed in as {user.email ?? "an admin user"}.
         </CardContent>
       </Card>
     </section>

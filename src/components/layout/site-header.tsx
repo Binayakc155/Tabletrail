@@ -1,20 +1,21 @@
 "use client";
 
+import { SignInButton, SignUpButton, SignOutButton, UserButton, useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
-import { useSession, signOut } from "next-auth/react";
 
 import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { getClerkUserRole } from "@/lib/auth-roles";
 import { cn } from "@/lib/utils";
 import { siteConfig } from "@/config/site";
 
 export function SiteHeader() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { data: session, status } = useSession();
-  const isAuthenticated = status === "authenticated" && Boolean(session);
+  const { isSignedIn, user } = useUser();
+  const role = getClerkUserRole(user?.publicMetadata);
 
   return (
     <header className="sticky top-0 z-40 border-b border-border/50 bg-background/85 backdrop-blur-xl">
@@ -43,26 +44,24 @@ export function SiteHeader() {
 
         <div className="hidden items-center gap-3 lg:flex">
           <ThemeToggle />
-          {isAuthenticated ? (
+          {isSignedIn ? (
             <>
               <Badge variant="outline" className="capitalize">
-                {session?.user?.role ?? "customer"}
+                {role}
               </Badge>
               <Button asChild variant="outline">
                 <Link href="/dashboard">Dashboard</Link>
               </Button>
-              <Button type="button" onClick={() => signOut({ callbackUrl: "/" })}>
-                Logout
-              </Button>
+              <UserButton afterSignOutUrl="/" />
             </>
           ) : (
             <>
-              <Button asChild variant="outline">
-                <Link href="/login">Sign in</Link>
-              </Button>
-              <Button asChild variant="outline">
-                <Link href="/register">Create account</Link>
-              </Button>
+              <SignInButton mode="modal">
+                <Button type="button" variant="outline">Sign in</Button>
+              </SignInButton>
+              <SignUpButton mode="modal">
+                <Button type="button" variant="outline">Create account</Button>
+              </SignUpButton>
             </>
           )}
           <Button asChild>
@@ -101,7 +100,7 @@ export function SiteHeader() {
               {item.label}
             </Link>
           ))}
-          {isAuthenticated ? (
+          {isSignedIn ? (
             <>
               <Link
                 href="/dashboard"
@@ -110,16 +109,15 @@ export function SiteHeader() {
               >
                 Dashboard
               </Link>
-              <button
-                type="button"
-                className="rounded-2xl px-4 py-3 text-left text-sm font-medium text-foreground transition-colors hover:bg-accent"
-                onClick={() => {
-                  setIsMenuOpen(false);
-                  signOut({ callbackUrl: "/" });
-                }}
-              >
-                Logout
-              </button>
+              <SignOutButton>
+                <button
+                  type="button"
+                  className="rounded-2xl px-4 py-3 text-left text-sm font-medium text-foreground transition-colors hover:bg-accent"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Logout
+                </button>
+              </SignOutButton>
             </>
           ) : (
             <>
@@ -140,14 +138,16 @@ export function SiteHeader() {
             </>
           )}
           <div className="flex gap-3 px-1 pt-2">
-            {isAuthenticated ? (
-              <Button type="button" variant="outline" className="flex-1" onClick={() => signOut({ callbackUrl: "/" })}>
-                Logout
-              </Button>
+            {isSignedIn ? (
+              <SignOutButton>
+                <Button type="button" variant="outline" className="flex-1">
+                  Logout
+                </Button>
+              </SignOutButton>
             ) : (
-              <Button asChild variant="outline" className="flex-1">
-                <Link href="/login">Sign in</Link>
-              </Button>
+              <SignInButton mode="modal">
+                <Button type="button" variant="outline" className="flex-1">Sign in</Button>
+              </SignInButton>
             )}
             <Button asChild className="flex-1">
               <Link href="#pricing">List your restaurant</Link>

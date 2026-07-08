@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { getServerSession } from "next-auth/next";
 
-import { authOptions } from "@/auth";
+import { ensureLocalUser, getCurrentAppUser } from "@/lib/clerk-auth";
 import { isOwnerOrAdmin } from "@/lib/auth-roles";
 import { prisma } from "@/lib/prisma";
 import { restaurantFormSchema } from "@/lib/validators/restaurant";
@@ -22,9 +21,9 @@ export async function GET(_: NextRequest, { params }: { params: Promise<{ id: st
 
 export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const session = await getServerSession(authOptions);
+  const user = await getCurrentAppUser();
 
-  if (!session?.user?.id || !isOwnerOrAdmin(session.user.role)) {
+  if (!user || !isOwnerOrAdmin(user.role)) {
     return NextResponse.json({ message: "Unauthorized." }, { status: 401 });
   }
 
@@ -35,8 +34,10 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
     return NextResponse.json({ message: parsed.error.issues[0]?.message ?? "Invalid data." }, { status: 400 });
   }
 
+  await ensureLocalUser(user);
+
   const restaurant = await prisma.restaurant.findFirst({
-    where: { id, ownerId: session.user.id },
+    where: { id, ownerId: user.id },
   });
 
   if (!restaurant) {

@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
-import { getServerSession } from "next-auth/next";
 
-import { authOptions } from "@/auth";
+import { ensureLocalUser, getCurrentAppUser } from "@/lib/clerk-auth";
 import { isOwnerOrAdmin } from "@/lib/auth-roles";
 import { prisma } from "@/lib/prisma";
 import { restaurantFormSchema } from "@/lib/validators/restaurant";
@@ -18,9 +17,9 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-  const session = await getServerSession(authOptions);
+  const user = await getCurrentAppUser();
 
-  if (!session?.user?.id || !isOwnerOrAdmin(session.user.role)) {
+  if (!user || !isOwnerOrAdmin(user.role)) {
     return NextResponse.json({ message: "Unauthorized." }, { status: 401 });
   }
 
@@ -31,7 +30,8 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: parsed.error.issues[0]?.message ?? "Invalid data." }, { status: 400 });
   }
 
-  const restaurant = await createOwnerRestaurant(session.user.id, parsed.data, "/uploads/restaurants/placeholder.png");
+  await ensureLocalUser(user);
+  const restaurant = await createOwnerRestaurant(user.id, parsed.data, "/uploads/restaurants/placeholder.png");
 
   return NextResponse.json({ restaurant }, { status: 201 });
 }

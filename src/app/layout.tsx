@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
+import { ClerkProvider } from "@clerk/nextjs";
 import { IBM_Plex_Mono, Plus_Jakarta_Sans } from "next/font/google";
-import { getServerSession } from "next-auth/next";
 
-import { authOptions } from "@/auth";
 import { AppProviders } from "@/components/providers/app-providers";
 import { SiteShell } from "@/components/layout/site-shell";
 import { siteConfig } from "@/config/site";
@@ -33,14 +32,14 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await getServerSession(authOptions);
-
   return (
     <html lang="en" className={`${plusJakartaSans.variable} ${ibmPlexMono.variable} h-full antialiased`} suppressHydrationWarning>
       <body className="min-h-full bg-background text-foreground">
-        <AppProviders session={session}>
-          <SiteShell>{children}</SiteShell>
-        </AppProviders>
+        <ClerkProvider signInUrl="/login" signUpUrl="/register" afterSignOutUrl="/">
+          <AppProviders>
+            <SiteShell>{children}</SiteShell>
+          </AppProviders>
+        </ClerkProvider>
       </body>
     </html>
   );

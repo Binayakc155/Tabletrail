@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getServerSession } from "next-auth/next";
 
-import { authOptions } from "@/auth";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { siteConfig } from "@/config/site";
+import { requireAppUser } from "@/lib/clerk-auth";
 
 export const metadata: Metadata = {
   title: `Dashboard | ${siteConfig.name}`,
@@ -14,7 +13,7 @@ export const metadata: Metadata = {
 };
 
 export default async function DashboardPage() {
-  const session = await getServerSession(authOptions);
+  const user = await requireAppUser();
 
   return (
     <section className="mx-auto w-full max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
@@ -23,11 +22,11 @@ export default async function DashboardPage() {
           <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">Protected area</p>
           <h1 className="text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">Your TableTrail dashboard</h1>
           <p className="max-w-2xl text-lg leading-8 text-muted-foreground">
-            Signed in as {session?.user?.email ?? "an authenticated user"}. Your current role is {session?.user?.role ?? "customer"}.
+            Signed in as {user.email ?? "an authenticated user"}. Your current role is {user.role}.
           </p>
         </div>
         <Badge variant="secondary" className="w-fit capitalize">
-          {session?.user?.role ?? "customer"}
+          {user.role}
         </Badge>
       </div>
 
@@ -38,9 +37,9 @@ export default async function DashboardPage() {
             <CardDescription>Secure session and profile information.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-2 text-sm text-muted-foreground">
-            <p>Name: {session?.user?.name ?? "Not set"}</p>
-            <p>Email: {session?.user?.email ?? "Not set"}</p>
-            <p>Role: {session?.user?.role ?? "customer"}</p>
+            <p>Name: {user.name ?? "Not set"}</p>
+            <p>Email: {user.email ?? "Not set"}</p>
+            <p>Role: {user.role}</p>
           </CardContent>
         </Card>
 

@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { getServerSession } from "next-auth/next";
 
-import { authOptions } from "@/auth";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { RestaurantManager } from "@/components/restaurants/restaurant-manager";
 import { isOwnerOrAdmin } from "@/lib/auth-roles";
+import { ensureLocalUser, requireAppUser } from "@/lib/clerk-auth";
 import { listOwnerRestaurants } from "@/lib/restaurant-management";
 import { siteConfig } from "@/config/site";
 
@@ -16,13 +15,14 @@ export const metadata: Metadata = {
 };
 
 export default async function OwnerPage() {
-  const session = await getServerSession(authOptions);
+  const user = await requireAppUser();
 
-  if (!isOwnerOrAdmin(session?.user?.role)) {
+  if (!isOwnerOrAdmin(user.role)) {
     redirect("/dashboard?error=forbidden");
   }
 
-  const restaurants = await listOwnerRestaurants(session.user.id);
+  await ensureLocalUser(user);
+  const restaurants = await listOwnerRestaurants(user.id);
 
   return (
     <section className="mx-auto w-full max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
@@ -41,7 +41,7 @@ export default async function OwnerPage() {
           <CardHeader>
             <CardTitle>Your access</CardTitle>
             <CardDescription>
-              Signed in as {session?.user?.email ?? "a role-authorized user"} with role {session?.user?.role ?? "customer"}.
+              Signed in as {user.email ?? "a role-authorized user"} with role {user.role}.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-2 text-sm text-muted-foreground">

@@ -6,6 +6,15 @@ export const publicSignUpRoles = ["customer", "restaurant_owner"] as const;
 
 export type PublicSignUpRole = (typeof publicSignUpRoles)[number];
 
+export function isUserRole(value: unknown): value is UserRole {
+  return typeof value === "string" && userRoles.includes(value as UserRole);
+}
+
+export function getClerkUserRole(metadata: Record<string, unknown> | null | undefined): UserRole {
+  const role = metadata?.role;
+  return isUserRole(role) ? role : "customer";
+}
+
 export function isOwnerOrAdmin(role?: string | null) {
   return role === "restaurant_owner" || role === "admin";
 }
