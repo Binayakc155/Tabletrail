@@ -52,7 +52,7 @@ export function SiteHeader() {
               <Button asChild variant="outline">
                 <Link href="/dashboard">Dashboard</Link>
               </Button>
-              <UserButton afterSignOutUrl="/" />
+              <UserButton />
             </>
           ) : (
             <>

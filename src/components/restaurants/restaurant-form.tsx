@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useTransition } from "react";
+import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, Upload } from "lucide-react";
@@ -26,7 +26,7 @@ export function RestaurantForm({
   restaurantId?: string;
 }) {
   const [isPending, startTransition] = useTransition();
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(defaultValues?.imageUrl ?? null);
   const [serverError, setServerError] = useState<string | null>(null);
 
   const form = useForm<RestaurantFormInput, undefined, RestaurantFormValues>({
@@ -42,14 +42,6 @@ export function RestaurantForm({
       longitude: defaultValues?.longitude ?? 0,
     },
   });
-
-  useEffect(() => {
-    if (!defaultValues?.imageUrl) {
-      return;
-    }
-
-    setPreviewUrl(defaultValues.imageUrl);
-  }, [defaultValues?.imageUrl]);
 
   async function handleSubmit(values: RestaurantFormValues) {
     setServerError(null);

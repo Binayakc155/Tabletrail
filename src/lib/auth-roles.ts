@@ -2,10 +2,6 @@ export const userRoles = ["customer", "restaurant_owner", "admin"] as const;
 
 export type UserRole = (typeof userRoles)[number];
 
-export const publicSignUpRoles = ["customer", "restaurant_owner"] as const;
-
-export type PublicSignUpRole = (typeof publicSignUpRoles)[number];
-
 export function isUserRole(value: unknown): value is UserRole {
   return typeof value === "string" && userRoles.includes(value as UserRole);
 }
