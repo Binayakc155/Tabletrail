@@ -12,6 +12,8 @@ export const metadata: Metadata = {
   description: "Protected account dashboard for restaurant platform users.",
 };
 
+export const dynamic = "force-dynamic";
+
 export default async function DashboardPage() {
   const user = await requireAppUser();
 
@@ -54,6 +56,9 @@ export default async function DashboardPage() {
             </Button>
             <Button asChild variant="outline">
               <Link href="/admin">Admin console</Link>
+            </Button>
+            <Button asChild variant="outline">
+              <Link href="/favorites">Favorites</Link>
             </Button>
             <Button asChild>
               <Link href="/restaurants">Browse restaurants</Link>

@@ -25,6 +25,34 @@ export function buildRestaurantSlug(name: string) {
 }
 
 export async function saveRestaurantImage(file: File, slug: string) {
+  const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
+  const uploadPreset = process.env.CLOUDINARY_UPLOAD_PRESET;
+
+  if (cloudName && uploadPreset) {
+    const formData = new FormData();
+    formData.set("file", file);
+    formData.set("upload_preset", uploadPreset);
+    formData.set("folder", "restaurants");
+    formData.set("public_id", `${slug}-${Date.now()}`);
+
+    const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+      method: "POST",
+      body: formData,
+    });
+
+    if (!response.ok) {
+      throw new Error("Cloudinary image upload failed.");
+    }
+
+    const result = (await response.json()) as { secure_url?: string };
+
+    if (!result.secure_url) {
+      throw new Error("Cloudinary did not return an image URL.");
+    }
+
+    return result.secure_url;
+  }
+
   await mkdir(uploadDirectory, { recursive: true });
 
   const extension = path.extname(file.name) || ".png";
@@ -38,7 +66,7 @@ export async function saveRestaurantImage(file: File, slug: string) {
 }
 
 export async function replaceRestaurantImage(previousImageUrl: string | null, file: File, slug: string) {
-  if (previousImageUrl) {
+  if (previousImageUrl?.startsWith("/uploads/restaurants/")) {
     const existingImagePath = path.join(process.cwd(), "public", previousImageUrl.replace(/^\//, ""));
     await unlink(existingImagePath).catch(() => undefined);
   }
@@ -69,13 +97,27 @@ export async function createOwnerRestaurant(ownerId: string, values: RestaurantF
       name: values.name,
       description: values.description,
       address: values.address,
+      city: values.city,
+      contactEmail: values.contactEmail || null,
       phoneNumber: values.phoneNumber,
       openingHours: values.openingHours,
       cuisine: values.cuisine,
+      priceLevel: values.priceLevel,
       latitude: values.latitude,
       longitude: values.longitude,
       imageUrl,
-      city: "",
+      images: {
+        create: {
+          url: imageUrl,
+          alt: values.name,
+          isCover: true,
+        },
+      },
+      menus: {
+        create: {
+          title: "Main menu",
+        },
+      },
     },
   });
 }
@@ -87,13 +129,15 @@ export async function updateOwnerRestaurant(restaurant: Restaurant, values: Rest
       name: values.name,
       description: values.description,
       address: values.address,
+      city: values.city,
+      contactEmail: values.contactEmail || null,
       phoneNumber: values.phoneNumber,
       openingHours: values.openingHours,
       cuisine: values.cuisine,
+      priceLevel: values.priceLevel,
       latitude: values.latitude,
       longitude: values.longitude,
       imageUrl: imageUrl ?? restaurant.imageUrl,
-      city: restaurant.city,
     },
   });
 }

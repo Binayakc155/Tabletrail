@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { RestaurantForm } from "@/components/restaurants/restaurant-form";
 
-export function RestaurantManager({ restaurants }: { restaurants: Array<{ id: string; name: string; description: string; address: string; phoneNumber: string; openingHours: string; cuisine: string; latitude: number | null; longitude: number | null; imageUrl: string; slug: string; }> }) {
+export function RestaurantManager({ restaurants }: { restaurants: Array<{ id: string; name: string; description: string; address: string; city: string; contactEmail: string | null; phoneNumber: string; openingHours: string; cuisine: string; priceLevel: number; latitude: number | null; longitude: number | null; imageUrl: string; slug: string; status: string; }> }) {
   const [editingRestaurant, setEditingRestaurant] = useState<string | null>(null);
   const activeRestaurant = restaurants.find((restaurant) => restaurant.id === editingRestaurant) ?? null;
 
@@ -44,9 +44,12 @@ export function RestaurantManager({ restaurants }: { restaurants: Array<{ id: st
                 name: activeRestaurant.name,
                 description: activeRestaurant.description,
                 address: activeRestaurant.address,
+                city: activeRestaurant.city,
+                contactEmail: activeRestaurant.contactEmail ?? "",
                 phoneNumber: activeRestaurant.phoneNumber,
                 openingHours: activeRestaurant.openingHours,
                 cuisine: activeRestaurant.cuisine,
+                priceLevel: activeRestaurant.priceLevel,
                 latitude: activeRestaurant.latitude ?? 0,
                 longitude: activeRestaurant.longitude ?? 0,
                 imageUrl: activeRestaurant.imageUrl,
@@ -68,6 +71,7 @@ export function RestaurantManager({ restaurants }: { restaurants: Array<{ id: st
                 <p className="text-lg font-semibold text-foreground">{restaurant.name}</p>
                 <p className="text-sm text-muted-foreground">{restaurant.cuisine} · {restaurant.address}</p>
                 <p className="text-sm text-muted-foreground">{restaurant.openingHours}</p>
+                <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">{restaurant.status}</p>
               </div>
               <div className="flex gap-3">
                 <Button variant="outline" type="button" onClick={() => setEditingRestaurant(restaurant.id)}>

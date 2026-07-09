@@ -14,3 +14,9 @@ export function getClerkUserRole(metadata: Record<string, unknown> | null | unde
 export function isOwnerOrAdmin(role?: string | null) {
   return role === "restaurant_owner" || role === "admin";
 }
+
+export function roleLabel(role?: string | null) {
+  if (role === "restaurant_owner") return "Restaurant Owner";
+  if (role === "admin") return "Admin";
+  return "Customer";
+}

@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import type { RestaurantSummary } from "@/features/restaurants/types";
 
 function formatPriceLevel(priceLevel: RestaurantSummary["priceLevel"]) {
-  return "$".repeat(priceLevel);
+  return "$".repeat(Math.max(1, Math.min(priceLevel, 4)));
 }
 
 export function RestaurantCard({ restaurant }: { restaurant: RestaurantSummary }) {
@@ -43,7 +43,7 @@ export function RestaurantCard({ restaurant }: { restaurant: RestaurantSummary }
         <div className="flex items-start justify-between gap-4">
           <div>
             <CardTitle>{restaurant.name}</CardTitle>
-            <CardDescription className="mt-1">{restaurant.neighborhood}</CardDescription>
+            <CardDescription className="mt-1">{restaurant.address ?? restaurant.neighborhood ?? restaurant.city}</CardDescription>
           </div>
           <span className="rounded-full bg-accent px-3 py-1 text-xs font-medium text-foreground">{formatPriceLevel(restaurant.priceLevel)}</span>
         </div>
@@ -51,7 +51,7 @@ export function RestaurantCard({ restaurant }: { restaurant: RestaurantSummary }
       <CardContent className="space-y-4">
         <p className="text-sm leading-6 text-muted-foreground">{restaurant.description}</p>
         <div className="flex flex-wrap gap-2">
-          {restaurant.highlights.map((highlight) => (
+          {(restaurant.highlights ?? [restaurant.openingHours ?? "Open hours listed", restaurant.city]).filter(Boolean).map((highlight) => (
             <Badge key={highlight} variant="outline">
               {highlight}
             </Badge>
@@ -59,7 +59,9 @@ export function RestaurantCard({ restaurant }: { restaurant: RestaurantSummary }
         </div>
       </CardContent>
       <CardFooter className="flex items-center justify-between gap-3">
-        <p className="text-sm text-muted-foreground">{restaurant.reviewCount} verified reviews</p>
+        <p className="text-sm text-muted-foreground">
+          {restaurant.distanceMiles ? `${restaurant.distanceMiles.toFixed(1)} mi away` : `${restaurant.reviewCount} reviews`}
+        </p>
         <Button asChild size="sm" variant="outline">
           <Link href={`/restaurants/${restaurant.slug}`}>
             View profile

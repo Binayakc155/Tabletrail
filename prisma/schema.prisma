@@ -6,70 +6,152 @@ datasource db {
   provider = "postgresql"
 }
 
+enum UserRole {
+  customer
+  restaurant_owner
+  admin
+}
+
+enum RestaurantStatus {
+  pending
+  approved
+  rejected
+}
+
 model User {
   id            String    @id @default(cuid())
   name          String?
-  email         String?   @unique
+  email         String    @unique
   emailVerified DateTime?
   image         String?
-  role          String    @default("customer")
+  role          UserRole  @default(customer)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
-  reviews         RestaurantReview[]
-  savedRestaurants SavedRestaurant[]
-  restaurants     Restaurant[] @relation("RestaurantOwner")
+  restaurants Restaurant[] @relation("RestaurantOwner")
+  reviews     Review[]
+  favorites   Favorite[]
+
+  @@index([role])
 }
 
 model Restaurant {
-  id          String             @id @default(cuid())
-  slug        String             @unique
-  name        String
-  description String
-  address     String
-  phoneNumber String
+  id           String           @id @default(cuid())
+  slug         String           @unique
+  name         String
+  description  String
+  address      String
+  city         String           @default("")
+  contactEmail String?
+  phoneNumber  String
   openingHours String
-  cuisine     String
-  priceLevel  Int                @default(2)
-  rating      Float              @default(0)
-  reviewCount Int                @default(0)
-  imageUrl    String
-  city        String             @default("")
-  latitude    Float?
-  longitude   Float?
-  isFeatured  Boolean            @default(false)
-  createdAt   DateTime           @default(now())
-  updatedAt   DateTime           @updatedAt
-  ownerId     String?
+  cuisine      String
+  priceLevel   Int              @default(2)
+  rating       Float            @default(0)
+  reviewCount  Int              @default(0)
+  imageUrl     String
+  latitude     Float?
+  longitude    Float?
+  status       RestaurantStatus @default(pending)
+  isFeatured   Boolean          @default(false)
+  viewCount    Int              @default(0)
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+  ownerId      String?
 
-  owner       User?              @relation("RestaurantOwner", fields: [ownerId], references: [id], onDelete: SetNull)
-  reviews     RestaurantReview[]
-  favorites   SavedRestaurant[]
+  owner     User?             @relation("RestaurantOwner", fields: [ownerId], references: [id], onDelete: SetNull)
+  images    RestaurantImage[]
+  menus     Menu[]
+  reviews   Review[]
+  favorites Favorite[]
 
   @@index([city])
   @@index([cuisine])
   @@index([rating])
+  @@index([status])
+  @@index([ownerId])
 }
 
-model RestaurantReview {
-  id           String     @id @default(cuid())
+model RestaurantImage {
+  id           String   @id @default(cuid())
+  url          String
+  alt          String?
+  isCover      Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  restaurantId String
+
+  restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+
+  @@index([restaurantId])
+}
+
+model Menu {
+  id           String   @id @default(cuid())
+  title        String   @default("Main menu")
+  imageUrl     String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  restaurantId String
+
+  restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  categories Category[]
+  items      MenuItem[]
+
+  @@index([restaurantId])
+}
+
+model Category {
+  id        String @id @default(cuid())
+  name      String
+  sortOrder Int    @default(0)
+  menuId    String
+
+  menu  Menu       @relation(fields: [menuId], references: [id], onDelete: Cascade)
+  items MenuItem[]
+
+  @@index([menuId])
+}
+
+model MenuItem {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  price       Decimal  @db.Decimal(10, 2)
+  imageUrl    String?
+  isAvailable Boolean  @default(true)
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  menuId      String
+  categoryId  String?
+
+  menu     Menu      @relation(fields: [menuId], references: [id], onDelete: Cascade)
+  category Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+
+  @@index([menuId])
+  @@index([categoryId])
+}
+
+model Review {
+  id           String   @id @default(cuid())
   rating       Int
   comment      String
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
   restaurantId String
   userId       String
 
   restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
   user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  @@unique([restaurantId, userId])
   @@index([restaurantId])
   @@index([userId])
 }
 
-model SavedRestaurant {
-  id           String     @id @default(cuid())
-  createdAt    DateTime   @default(now())
+model Favorite {
+  id           String   @id @default(cuid())
+  createdAt    DateTime @default(now())
   restaurantId String
   userId       String
 
@@ -78,4 +160,5 @@ model SavedRestaurant {
 
   @@unique([restaurantId, userId])
   @@index([userId])
+  @@index([restaurantId])
 }

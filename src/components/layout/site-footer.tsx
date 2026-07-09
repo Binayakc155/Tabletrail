@@ -51,7 +51,7 @@ export function SiteFooter() {
         <Separator className="h-px w-full bg-border/60" />
 
         <div className="flex flex-col gap-3 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
-          <p>Built with Next.js, Prisma, PostgreSQL, Auth.js, and shadcn/ui.</p>
+          <p>Built with Next.js, Prisma, Supabase PostgreSQL, Clerk, and shadcn/ui.</p>
           <p>Designed for a clean, responsive restaurant listing workflow.</p>
         </div>
       </div>

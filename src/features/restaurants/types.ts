@@ -1,13 +1,17 @@
 export type RestaurantSummary = {
+  id?: string;
   name: string;
   slug: string;
   cuisine: string;
   city: string;
-  neighborhood: string;
+  neighborhood?: string;
   rating: number;
   reviewCount: number;
-  priceLevel: 1 | 2 | 3 | 4;
+  priceLevel: number;
   description: string;
   imageUrl: string;
-  highlights: string[];
+  address?: string;
+  openingHours?: string;
+  distanceMiles?: number | null;
+  highlights?: string[];
 };

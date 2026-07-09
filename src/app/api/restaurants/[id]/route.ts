@@ -5,6 +5,7 @@ import { ensureLocalUser, getCurrentAppUser } from "@/lib/clerk-auth";
 import { isOwnerOrAdmin } from "@/lib/auth-roles";
 import { prisma } from "@/lib/prisma";
 import { restaurantFormSchema } from "@/lib/validators/restaurant";
+import { deleteOwnerRestaurant } from "@/lib/restaurant-management";
 
 export async function GET(_: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -50,16 +51,40 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
       name: parsed.data.name,
       description: parsed.data.description,
       address: parsed.data.address,
+      city: parsed.data.city,
+      contactEmail: parsed.data.contactEmail || null,
       phoneNumber: parsed.data.phoneNumber,
       openingHours: parsed.data.openingHours,
       cuisine: parsed.data.cuisine,
+      priceLevel: parsed.data.priceLevel,
       latitude: parsed.data.latitude,
       longitude: parsed.data.longitude,
       slug: restaurant.slug,
       imageUrl: restaurant.imageUrl,
-      city: restaurant.city,
     },
   });
 
   return NextResponse.json({ restaurant: updatedRestaurant });
+}
+
+export async function DELETE(_: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const user = await getCurrentAppUser();
+
+  if (!user || !isOwnerOrAdmin(user.role)) {
+    return NextResponse.json({ message: "Unauthorized." }, { status: 401 });
+  }
+
+  await ensureLocalUser(user);
+  const restaurant = await prisma.restaurant.findFirst({
+    where: user.role === "admin" ? { id } : { id, ownerId: user.id },
+  });
+
+  if (!restaurant) {
+    return NextResponse.json({ message: "Not found." }, { status: 404 });
+  }
+
+  await deleteOwnerRestaurant(restaurant);
+
+  return NextResponse.json({ success: true });
 }

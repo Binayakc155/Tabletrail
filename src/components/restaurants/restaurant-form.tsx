@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -35,9 +36,12 @@ export function RestaurantForm({
       name: defaultValues?.name ?? "",
       description: defaultValues?.description ?? "",
       address: defaultValues?.address ?? "",
+      city: defaultValues?.city ?? "",
+      contactEmail: defaultValues?.contactEmail ?? "",
       phoneNumber: defaultValues?.phoneNumber ?? "",
       openingHours: defaultValues?.openingHours ?? "",
       cuisine: defaultValues?.cuisine ?? "",
+      priceLevel: defaultValues?.priceLevel ?? 2,
       latitude: defaultValues?.latitude ?? 0,
       longitude: defaultValues?.longitude ?? 0,
     },
@@ -94,6 +98,19 @@ export function RestaurantForm({
 
       <div className="grid gap-2 sm:grid-cols-2">
         <div className="grid gap-2">
+          <Label htmlFor="city">City</Label>
+          <Input id="city" placeholder="San Francisco" {...form.register("city")} />
+          {form.formState.errors.city ? <p className="text-sm text-destructive">{form.formState.errors.city.message}</p> : null}
+        </div>
+        <div className="grid gap-2">
+          <Label htmlFor="contactEmail">Contact email</Label>
+          <Input id="contactEmail" type="email" placeholder="hello@restaurant.com" {...form.register("contactEmail")} />
+          {form.formState.errors.contactEmail ? <p className="text-sm text-destructive">{form.formState.errors.contactEmail.message}</p> : null}
+        </div>
+      </div>
+
+      <div className="grid gap-2 sm:grid-cols-2">
+        <div className="grid gap-2">
           <Label htmlFor="phoneNumber">Phone number</Label>
           <Input id="phoneNumber" placeholder="(555) 123-4567" {...form.register("phoneNumber")} />
           {form.formState.errors.phoneNumber ? <p className="text-sm text-destructive">{form.formState.errors.phoneNumber.message}</p> : null}
@@ -111,7 +128,12 @@ export function RestaurantForm({
         {form.formState.errors.openingHours ? <p className="text-sm text-destructive">{form.formState.errors.openingHours.message}</p> : null}
       </div>
 
-      <div className="grid gap-2 sm:grid-cols-2">
+      <div className="grid gap-2 sm:grid-cols-3">
+        <div className="grid gap-2">
+          <Label htmlFor="priceLevel">Price range</Label>
+          <Input id="priceLevel" type="number" min={1} max={4} {...form.register("priceLevel", { valueAsNumber: true })} />
+          {form.formState.errors.priceLevel ? <p className="text-sm text-destructive">{form.formState.errors.priceLevel.message}</p> : null}
+        </div>
         <div className="grid gap-2">
           <Label htmlFor="latitude">Latitude</Label>
           <Input id="latitude" type="number" step="any" placeholder="37.7749" {...form.register("latitude", { valueAsNumber: true })} />
@@ -140,8 +162,8 @@ export function RestaurantForm({
       </div>
 
       {previewUrl ? (
-        <div className="overflow-hidden rounded-3xl border border-border">
-          <img src={previewUrl} alt="Restaurant preview" className="h-60 w-full object-cover" />
+        <div className="relative h-60 overflow-hidden rounded-3xl border border-border">
+          <Image src={previewUrl} alt="Restaurant preview" fill className="object-cover" sizes="100vw" unoptimized />
         </div>
       ) : null}
 

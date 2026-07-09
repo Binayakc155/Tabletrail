@@ -152,7 +152,7 @@ export default function Home() {
             </Badge>
             <CardTitle className="text-2xl text-white">Designed for trust, not clutter.</CardTitle>
             <CardDescription className="text-primary-foreground/80">
-              Listings are structured for quick comparisons, while Auth.js and Prisma give you a path to verified accounts and saved places.
+              Listings are structured for quick comparisons, while Clerk and Prisma give you a path to verified accounts and saved places.
             </CardDescription>
           </CardHeader>
           <CardContent className="grid gap-3 sm:grid-cols-2">
@@ -194,13 +194,13 @@ export default function Home() {
             <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">Launch</p>
             <CardTitle className="text-3xl">Ready to add authentication, listings, and restaurant workflows.</CardTitle>
             <CardDescription className="max-w-3xl text-base leading-7">
-              Set the PostgreSQL connection string, wire up your Auth.js provider, and push the Prisma schema when you are ready to move from scaffold to production data.
+              Set the Supabase PostgreSQL connection string, configure Clerk, and push the Prisma schema when you are ready to move from scaffold to production data.
             </CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col gap-3 sm:flex-row">
             <Button asChild>
               <Link href="/login">
-                Configure Auth.js
+                Configure Clerk
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </Button>

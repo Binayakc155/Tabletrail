@@ -8,11 +8,14 @@ import { isOwnerOrAdmin } from "@/lib/auth-roles";
 import { ensureLocalUser, requireAppUser } from "@/lib/clerk-auth";
 import { listOwnerRestaurants } from "@/lib/restaurant-management";
 import { siteConfig } from "@/config/site";
+import { prisma } from "@/lib/prisma";
 
 export const metadata: Metadata = {
   title: `Owner tools | ${siteConfig.name}`,
   description: "Restaurant management dashboard for owners.",
 };
+
+export const dynamic = "force-dynamic";
 
 export default async function OwnerPage() {
   const user = await requireAppUser();
@@ -23,6 +26,11 @@ export default async function OwnerPage() {
 
   await ensureLocalUser(user);
   const restaurants = await listOwnerRestaurants(user.id);
+  const restaurantIds = restaurants.map((restaurant) => restaurant.id);
+  const [reviewCount, favoriteCount] = await Promise.all([
+    prisma.review.count({ where: { restaurantId: { in: restaurantIds } } }),
+    prisma.favorite.count({ where: { restaurantId: { in: restaurantIds } } }),
+  ]);
 
   return (
     <section className="mx-auto w-full max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
@@ -49,6 +57,9 @@ export default async function OwnerPage() {
             <p>Edit Restaurant</p>
             <p>Delete Restaurant</p>
             <p>Upload Restaurant Image</p>
+            <p>Menu Management</p>
+            <p>Review Management</p>
+            <p>Analytics: {restaurants.length} restaurants, {reviewCount} reviews, {favoriteCount} favorites</p>
           </CardContent>
         </Card>
 

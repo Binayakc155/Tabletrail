@@ -2,18 +2,15 @@ import { NextResponse } from "next/server";
 
 import { ensureLocalUser, getCurrentAppUser } from "@/lib/clerk-auth";
 import { isOwnerOrAdmin } from "@/lib/auth-roles";
-import { prisma } from "@/lib/prisma";
 import { restaurantFormSchema } from "@/lib/validators/restaurant";
 import { createOwnerRestaurant } from "@/lib/restaurant-management";
+import { listRestaurants } from "@/features/restaurants/data/restaurants";
 
-export async function GET() {
-  const restaurants = await prisma.restaurant.findMany({
-    orderBy: {
-      updatedAt: "desc",
-    },
-  });
+export async function GET(request: Request) {
+  const url = new URL(request.url);
+  const result = await listRestaurants(Object.fromEntries(url.searchParams));
 
-  return NextResponse.json({ restaurants });
+  return NextResponse.json(result);
 }
 
 export async function POST(request: Request) {

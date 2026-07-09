@@ -49,6 +49,10 @@ export async function requireAppUser() {
 }
 
 export async function ensureLocalUser(user: AppUser) {
+  if (!user.email) {
+    throw new Error("A verified email address is required.");
+  }
+
   return prisma.user.upsert({
     where: {
       id: user.id,
