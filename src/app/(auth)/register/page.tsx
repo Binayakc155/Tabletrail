@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import { SignUp } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import { auth } from "@clerk/nextjs/server";
 
 import { AuthPageShell } from "@/components/auth/auth-page-shell";
+import { RoleAwareSignUp } from "@/components/auth/role-aware-auth";
 import { siteConfig } from "@/config/site";
 
 export const metadata: Metadata = {
@@ -11,8 +11,15 @@ export const metadata: Metadata = {
   description: "Create a secure restaurant platform account with a password and role.",
 };
 
-export default async function RegisterPage() {
+export default async function RegisterPage({
+  searchParams,
+}: {
+  searchParams?: Promise<{
+    role?: string;
+  }>;
+}) {
   const { userId } = await auth();
+  const resolvedSearchParams = await searchParams;
 
   if (userId) {
     redirect("/dashboard");
@@ -29,9 +36,9 @@ export default async function RegisterPage() {
         "Ready for customer or owner onboarding",
       ]}
       formTitle="Create account"
-      formDescription="New accounts start as customers. Set publicMetadata.role in Clerk to restaurant_owner or admin when needed."
+      formDescription="Choose your role before creating your secure Clerk account."
     >
-      <SignUp signInUrl="/login" fallbackRedirectUrl="/dashboard" />
+      <RoleAwareSignUp initialRole={resolvedSearchParams?.role} />
     </AuthPageShell>
   );
 }

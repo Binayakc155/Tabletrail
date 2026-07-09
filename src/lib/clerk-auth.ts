@@ -1,8 +1,8 @@
-import { auth, currentUser } from "@clerk/nextjs/server";
+import { auth, clerkClient, currentUser } from "@clerk/nextjs/server";
 
 import { prisma } from "@/lib/prisma";
 import type { UserRole } from "@/lib/auth-roles";
-import { getClerkUserRole } from "@/lib/auth-roles";
+import { getClerkSignUpRole, getClerkUserRole, isUserRole } from "@/lib/auth-roles";
 
 export type AppUser = {
   id: string;
@@ -26,7 +26,23 @@ export async function getCurrentAppUser(): Promise<AppUser | null> {
 
   const email = user.primaryEmailAddress?.emailAddress ?? user.emailAddresses[0]?.emailAddress ?? null;
   const name = user.fullName ?? ([user.firstName, user.lastName].filter(Boolean).join(" ") || null);
-  const role = getClerkUserRole(user.publicMetadata);
+  let role = getClerkUserRole(user.publicMetadata);
+
+  if (!isUserRole(user.publicMetadata.role)) {
+    const signUpRole = getClerkSignUpRole(user.unsafeMetadata);
+
+    if (signUpRole) {
+      const client = await clerkClient();
+
+      await client.users.updateUserMetadata(user.id, {
+        publicMetadata: {
+          role: signUpRole,
+        },
+      });
+
+      role = signUpRole;
+    }
+  }
 
   return {
     id: user.id,

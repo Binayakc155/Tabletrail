@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import { SignIn } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import { auth } from "@clerk/nextjs/server";
 
 import { AuthPageShell } from "@/components/auth/auth-page-shell";
+import { RoleAwareSignIn } from "@/components/auth/role-aware-auth";
 import { siteConfig } from "@/config/site";
 
 export const metadata: Metadata = {
@@ -15,12 +15,11 @@ export default async function LoginPage({
   searchParams,
 }: {
   searchParams?: Promise<{
-    callbackUrl?: string;
+    role?: string;
   }>;
 }) {
   const { userId } = await auth();
   const resolvedSearchParams = await searchParams;
-  const fallbackRedirectUrl = resolvedSearchParams?.callbackUrl ?? "/dashboard";
 
   if (userId) {
     redirect("/dashboard");
@@ -37,9 +36,9 @@ export default async function LoginPage({
         "Use the providers configured in Clerk",
       ]}
       formTitle="Sign in"
-      formDescription="Use your Clerk account to continue into TableTrail."
+      formDescription="Choose how you want to continue, then sign in with your Clerk account."
     >
-      <SignIn signUpUrl="/register" fallbackRedirectUrl={fallbackRedirectUrl} />
+      <RoleAwareSignIn initialRole={resolvedSearchParams?.role} />
     </AuthPageShell>
   );
 }
