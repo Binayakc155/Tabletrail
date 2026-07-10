@@ -20,15 +20,18 @@ export function RestaurantForm({
   onSubmit,
   submitLabel,
   restaurantId,
+  onSuccess,
 }: {
   defaultValues?: Partial<RestaurantFormValues> & { imageUrl?: string };
   onSubmit: (formData: FormData) => Promise<{ success: boolean; error?: string } | void>;
   submitLabel: string;
   restaurantId?: string;
+  onSuccess?: () => void;
 }) {
   const [isPending, startTransition] = useTransition();
   const [previewUrl, setPreviewUrl] = useState<string | null>(defaultValues?.imageUrl ?? null);
   const [serverError, setServerError] = useState<string | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const form = useForm<RestaurantFormInput, undefined, RestaurantFormValues>({
     resolver: zodResolver(restaurantFormSchema),
@@ -60,11 +63,8 @@ export function RestaurantForm({
       formData.set("restaurantId", restaurantId);
     }
 
-    const fileInput = document.querySelector<HTMLInputElement>("[data-restaurant-image]");
-    const file = fileInput?.files?.[0];
-
-    if (file) {
-      formData.set("image", file);
+    if (selectedFile) {
+      formData.set("image", selectedFile);
     }
 
     startTransition(async () => {
@@ -72,7 +72,10 @@ export function RestaurantForm({
 
       if (result && !result.success) {
         setServerError(result.error ?? "Unable to save restaurant.");
+        return;
       }
+
+      onSuccess?.();
     });
   }
 
@@ -148,10 +151,11 @@ export function RestaurantForm({
 
       <div className="grid gap-2">
         <Label htmlFor="image">Restaurant image</Label>
-        <Input id="image" data-restaurant-image type="file" accept="image/*" onChange={(event) => {
+        <Input id="image" type="file" accept="image/*" onChange={(event) => {
           const file = event.target.files?.[0];
 
           if (file) {
+            setSelectedFile(file);
             setPreviewUrl(URL.createObjectURL(file));
           }
         }} />
