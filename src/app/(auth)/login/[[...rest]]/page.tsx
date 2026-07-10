@@ -1,14 +1,16 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { auth } from "@clerk/nextjs/server";
+import { auth, clerkClient } from "@clerk/nextjs/server";
 
 import { AuthPageShell } from "@/components/auth/auth-page-shell";
 import { RoleAwareSignIn } from "@/components/auth/role-aware-auth";
 import { siteConfig } from "@/config/site";
+import { getClerkUserRole, roleDashboardPath } from "@/lib/auth-roles";
 
 export const metadata: Metadata = {
   title: `Login | ${siteConfig.name}`,
-  description: "Sign in to manage restaurant listings, saved places, and admin workflows.",
+  description:
+    "Sign in to manage restaurant listings, saved places, and admin workflows.",
 };
 
 export default async function LoginPage({
@@ -22,21 +24,25 @@ export default async function LoginPage({
   const resolvedSearchParams = await searchParams;
 
   if (userId) {
-    redirect("/dashboard");
+    const client = await clerkClient();
+    const user = await client.users.getUser(userId);
+    const role = getClerkUserRole(user.publicMetadata);
+
+    redirect(roleDashboardPath(role));
   }
 
   return (
     <AuthPageShell
       badge="Welcome back"
       title="Log in to TableTrail"
-      description="Access your restaurant dashboard, saved reviews, and role-based tools from a single secure account."
+      description="Access your account securely."
       highlights={[
-        "Resume saved sessions instantly",
-        "Manage your restaurant or customer profile",
-        "Use the providers configured in Clerk",
+        "Resume saved sessions",
+        "Restaurant management",
+        "Customer dashboard",
       ]}
       formTitle="Sign in"
-      formDescription="Choose how you want to continue, then sign in with your Clerk account."
+      formDescription="Sign in with your Clerk account."
     >
       <RoleAwareSignIn initialRole={resolvedSearchParams?.role} />
     </AuthPageShell>

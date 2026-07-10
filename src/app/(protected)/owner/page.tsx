@@ -21,7 +21,7 @@ export default async function OwnerPage() {
   const user = await requireAppUser();
 
   if (!isOwnerOrAdmin(user.role)) {
-    redirect("/dashboard?error=forbidden");
+    redirect("/customer/dashboard?error=forbidden");
   }
 
   await ensureLocalUser(user);

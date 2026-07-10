@@ -59,7 +59,8 @@ export async function createRestaurantAction(formData: FormData) {
 
   await createOwnerRestaurant(user.id, parsed.data, imageUrl);
   revalidatePath("/owner");
-  revalidatePath("/dashboard");
+  revalidatePath("/owner/dashboard");
+  revalidatePath("/customer/dashboard");
 
   return { success: true };
 }
@@ -101,7 +102,8 @@ export async function updateRestaurantAction(formData: FormData) {
 
   await updateOwnerRestaurant(restaurant, parsed.data, imageUrl);
   revalidatePath("/owner");
-  revalidatePath("/dashboard");
+  revalidatePath("/owner/dashboard");
+  revalidatePath("/customer/dashboard");
   revalidatePath(`/restaurants/${restaurant.slug}`);
 
   return { success: true };
@@ -118,7 +120,8 @@ export async function deleteRestaurantAction(formData: FormData) {
 
   await deleteOwnerRestaurant(restaurant);
   revalidatePath("/owner");
-  revalidatePath("/dashboard");
+  revalidatePath("/owner/dashboard");
+  revalidatePath("/customer/dashboard");
 
   return { success: true };
 }

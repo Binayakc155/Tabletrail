@@ -1,6 +1,6 @@
 "use client";
 
-import { SignInButton, SignUpButton, SignOutButton, UserButton, useUser } from "@clerk/nextjs";
+import { SignOutButton, UserButton, useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
@@ -8,7 +8,7 @@ import { useState } from "react";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { getClerkUserRole } from "@/lib/auth-roles";
+import { getClerkUserRole, roleDashboardPath } from "@/lib/auth-roles";
 import { cn } from "@/lib/utils";
 import { siteConfig } from "@/config/site";
 
@@ -16,6 +16,7 @@ export function SiteHeader() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { isSignedIn, user } = useUser();
   const role = getClerkUserRole(user?.publicMetadata);
+  const dashboardPath = roleDashboardPath(role);
 
   return (
     <header className="sticky top-0 z-40 border-b border-border/50 bg-background/85 backdrop-blur-xl">
@@ -50,18 +51,18 @@ export function SiteHeader() {
                 {role}
               </Badge>
               <Button asChild variant="outline">
-                <Link href="/dashboard">Dashboard</Link>
+                <Link href={dashboardPath}>Dashboard</Link>
               </Button>
               <UserButton />
             </>
           ) : (
             <>
-              <SignInButton mode="modal">
-                <Button type="button" variant="outline">Sign in</Button>
-              </SignInButton>
-              <SignUpButton mode="modal">
-                <Button type="button" variant="outline">Create account</Button>
-              </SignUpButton>
+              <Button asChild variant="outline">
+                <Link href="/login">Sign in</Link>
+              </Button>
+              <Button asChild variant="outline">
+                <Link href="/register">Create account</Link>
+              </Button>
             </>
           )}
           <Button asChild>
@@ -103,7 +104,7 @@ export function SiteHeader() {
           {isSignedIn ? (
             <>
               <Link
-                href="/dashboard"
+                href={dashboardPath}
                 className="rounded-2xl px-4 py-3 text-sm font-medium text-foreground transition-colors hover:bg-accent"
                 onClick={() => setIsMenuOpen(false)}
               >
@@ -145,9 +146,9 @@ export function SiteHeader() {
                 </Button>
               </SignOutButton>
             ) : (
-              <SignInButton mode="modal">
-                <Button type="button" variant="outline" className="flex-1">Sign in</Button>
-              </SignInButton>
+              <Button asChild variant="outline" className="flex-1">
+                <Link href="/login" onClick={() => setIsMenuOpen(false)}>Sign in</Link>
+              </Button>
             )}
             <Button asChild className="flex-1">
               <Link href="#pricing">List your restaurant</Link>

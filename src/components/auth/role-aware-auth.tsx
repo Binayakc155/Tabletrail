@@ -29,7 +29,7 @@ function getSelfServiceRole(role: string | undefined): SelfServiceUserRole {
   return role === "restaurant_owner" ? "restaurant_owner" : "customer";
 }
 
-function RoleSelector({
+export function RoleSelector({
   selectedRole,
   onSelectRole,
 }: {
@@ -90,6 +90,7 @@ export function RoleAwareSignUp({ initialRole }: { initialRole?: string }) {
     <>
       <RoleSelector selectedRole={selectedRole} onSelectRole={setSelectedRole} />
       <SignUp
+        key={selectedRole}
         signInUrl={`/login?role=${selectedRole}`}
         fallbackRedirectUrl={roleDashboardPath(selectedRole)}
         forceRedirectUrl={roleDashboardPath(selectedRole)}

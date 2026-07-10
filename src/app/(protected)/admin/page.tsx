@@ -18,7 +18,7 @@ export default async function AdminPage() {
   const user = await requireAppUser();
 
   if (user.role !== "admin") {
-    redirect("/dashboard?error=forbidden");
+    redirect("/customer/dashboard?error=forbidden");
   }
 
   const [users, restaurants, reviews, favorites] = await Promise.all([

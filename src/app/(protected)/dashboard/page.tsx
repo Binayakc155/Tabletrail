@@ -52,7 +52,7 @@ export default async function DashboardPage() {
           </CardHeader>
           <CardContent className="flex flex-col gap-3">
             <Button asChild variant="outline">
-              <Link href="/owner">Owner tools</Link>
+              <Link href="/owner/dashboard">Owner tools</Link>
             </Button>
             <Button asChild variant="outline">
               <Link href="/admin">Admin console</Link>

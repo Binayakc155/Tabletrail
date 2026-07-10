@@ -5,10 +5,13 @@ import { auth } from "@clerk/nextjs/server";
 import { AuthPageShell } from "@/components/auth/auth-page-shell";
 import { RoleAwareSignUp } from "@/components/auth/role-aware-auth";
 import { siteConfig } from "@/config/site";
+import { getCurrentAppUser } from "@/lib/clerk-auth";
+import { roleDashboardPath } from "@/lib/auth-roles";
 
 export const metadata: Metadata = {
   title: `Create account | ${siteConfig.name}`,
-  description: "Create a secure restaurant platform account with a password and role.",
+  description:
+    "Create a secure restaurant platform account.",
 };
 
 export default async function RegisterPage({
@@ -22,21 +25,23 @@ export default async function RegisterPage({
   const resolvedSearchParams = await searchParams;
 
   if (userId) {
-    redirect("/dashboard");
+    const user = await getCurrentAppUser();
+
+    redirect(roleDashboardPath(user?.role));
   }
 
   return (
     <AuthPageShell
       badge="Start here"
       title="Create your TableTrail account"
-      description="Create a secure Clerk account for your TableTrail dashboard, saved restaurants, and management tools."
+      description="Choose your role and create your account."
       highlights={[
-        "Hosted Clerk sign-up flow",
-        "Secure sessions without local password storage",
-        "Ready for customer or owner onboarding",
+        "Customer account",
+        "Restaurant owner account",
+        "Secure authentication with Clerk",
       ]}
       formTitle="Create account"
-      formDescription="Choose your role before creating your secure Clerk account."
+      formDescription="Select your role before signing up."
     >
       <RoleAwareSignUp initialRole={resolvedSearchParams?.role} />
     </AuthPageShell>

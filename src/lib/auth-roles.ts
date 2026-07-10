@@ -33,7 +33,7 @@ export function roleLabel(role?: string | null) {
 }
 
 export function roleDashboardPath(role?: string | null) {
-  if (role === "restaurant_owner") return "/owner";
+  if (role === "restaurant_owner") return "/owner/dashboard";
   if (role === "admin") return "/admin";
-  return "/dashboard";
+  return "/customer/dashboard";
 }
