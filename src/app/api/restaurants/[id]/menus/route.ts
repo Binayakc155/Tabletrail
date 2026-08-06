@@ -7,7 +7,7 @@ import { prisma } from "@/lib/prisma";
 
 const menuSchema = z.object({
   title: z.string().min(2).max(120).default("Main menu"),
-  imageUrl: z.string().url().optional(),
+  imageUrl: z.union([z.string().url(), z.literal("")]).optional().transform((value) => value || undefined),
 });
 
 export async function GET(_: Request, { params }: { params: Promise<{ id: string }> }) {

@@ -10,6 +10,7 @@ import { RestaurantCard } from "@/components/owner/restaurant-card";
 import { RestaurantFilters, type RestaurantSort, type RestaurantViewMode } from "@/components/owner/restaurant-filters";
 import type { OwnerRestaurant } from "@/components/owner/types";
 import { RestaurantForm } from "@/components/restaurants/restaurant-form";
+import { MenuManagementDialog } from "@/components/owner/menu-management-dialog";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
@@ -23,6 +24,7 @@ export function RestaurantList({ restaurants }: { restaurants: OwnerRestaurant[]
   const [addOpen, setAddOpen] = useState(false);
   const [editingRestaurant, setEditingRestaurant] = useState<OwnerRestaurant | null>(null);
   const [deletingRestaurant, setDeletingRestaurant] = useState<OwnerRestaurant | null>(null);
+  const [menuRestaurant, setMenuRestaurant] = useState<OwnerRestaurant | null>(null);
   const [toast, setToast] = useState<{ type: "success" | "error"; message: string } | null>(null);
   const [isDeleting, startDeleteTransition] = useTransition();
 
@@ -99,7 +101,7 @@ export function RestaurantList({ restaurants }: { restaurants: OwnerRestaurant[]
               viewMode={viewMode}
               onEdit={setEditingRestaurant}
               onDelete={setDeletingRestaurant}
-              onMenu={(item) => showToast("success", `Menu tools selected for ${item.name}.`)}
+              onMenu={setMenuRestaurant}
               onAnalytics={(item) => {
                 showToast("success", `Analytics selected for ${item.name}.`);
                 document.getElementById("analytics")?.scrollIntoView({ behavior: "smooth" });
@@ -165,6 +167,13 @@ export function RestaurantList({ restaurants }: { restaurants: OwnerRestaurant[]
           ) : null}
         </DialogContent>
       </Dialog>
+
+      <MenuManagementDialog
+        restaurant={menuRestaurant}
+        open={Boolean(menuRestaurant)}
+        onOpenChange={(open) => !open && setMenuRestaurant(null)}
+        onChanged={() => router.refresh()}
+      />
 
       <Dialog open={Boolean(deletingRestaurant)} onOpenChange={(open) => !open && setDeletingRestaurant(null)}>
         <DialogContent className="max-w-md">

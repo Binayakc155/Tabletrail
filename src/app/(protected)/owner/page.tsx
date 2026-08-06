@@ -151,7 +151,7 @@ export default async function OwnerPage() {
       description: latestReview
         ? `${latestReview.user?.name ?? latestReview.user?.email ?? "A customer"} reviewed ${latestReview.restaurant.name} with ${latestReview.rating} stars.`
         : "New customer feedback will appear here as diners leave ratings and comments.",
-      meta: latestReview ? `${Math.max(1, Math.round((Date.now() - latestReview.createdAt.getTime()) / 60000))}m ago` : "Live",
+      meta: latestReview ? `${Math.max(1, Math.round((now.getTime() - latestReview.createdAt.getTime()) / 60000))}m ago` : "Live",
       tone: "orange" as const,
     },
     {

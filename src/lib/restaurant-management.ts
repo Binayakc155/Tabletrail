@@ -7,7 +7,7 @@ import type { Restaurant } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import type { RestaurantFormValues } from "@/lib/validators/restaurant";
 
-const uploadDirectory = path.join(process.cwd(), "public", "uploads", "restaurants");
+const uploadsDirectory = path.join(process.cwd(), "public", "uploads");
 
 function slugify(value: string) {
   return value
@@ -24,7 +24,7 @@ export function buildRestaurantSlug(name: string) {
   return `${baseSlug}-${uniqueSuffix}`;
 }
 
-export async function saveRestaurantImage(file: File, slug: string) {
+async function saveImage(file: File, slug: string, folder: "restaurants" | "menus") {
   const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
   const uploadPreset = process.env.CLOUDINARY_UPLOAD_PRESET;
 
@@ -32,7 +32,7 @@ export async function saveRestaurantImage(file: File, slug: string) {
     const formData = new FormData();
     formData.set("file", file);
     formData.set("upload_preset", uploadPreset);
-    formData.set("folder", "restaurants");
+    formData.set("folder", folder);
     formData.set("public_id", `${slug}-${Date.now()}`);
 
     const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
@@ -53,6 +53,7 @@ export async function saveRestaurantImage(file: File, slug: string) {
     return result.secure_url;
   }
 
+  const uploadDirectory = path.join(uploadsDirectory, folder);
   await mkdir(uploadDirectory, { recursive: true });
 
   const extension = path.extname(file.name) || ".png";
@@ -62,16 +63,33 @@ export async function saveRestaurantImage(file: File, slug: string) {
 
   await writeFile(filePath, Buffer.from(bytes));
 
-  return `/uploads/restaurants/${fileName}`;
+  return `/uploads/${folder}/${fileName}`;
+}
+
+export async function saveRestaurantImage(file: File, slug: string) {
+  return saveImage(file, slug, "restaurants");
+}
+
+export async function saveMenuImage(file: File, slug: string) {
+  return saveImage(file, slug, "menus");
 }
 
 export async function replaceRestaurantImage(previousImageUrl: string | null, file: File, slug: string) {
-  if (previousImageUrl?.startsWith("/uploads/restaurants/")) {
-    const existingImagePath = path.join(process.cwd(), "public", previousImageUrl.replace(/^\//, ""));
-    await unlink(existingImagePath).catch(() => undefined);
-  }
+  await removeLocalUpload(previousImageUrl);
 
   return saveRestaurantImage(file, slug);
+}
+
+export async function replaceMenuImage(previousImageUrl: string | null, file: File, slug: string) {
+  await removeLocalUpload(previousImageUrl);
+
+  return saveMenuImage(file, slug);
+}
+
+export async function removeLocalUpload(imageUrl: string | null) {
+  if (!imageUrl?.startsWith("/uploads/restaurants/") && !imageUrl?.startsWith("/uploads/menus/")) return;
+  const existingImagePath = path.join(process.cwd(), "public", imageUrl.replace(/^\//, ""));
+  await unlink(existingImagePath).catch(() => undefined);
 }
 
 export async function listOwnerRestaurants(ownerId: string) {
@@ -143,10 +161,7 @@ export async function updateOwnerRestaurant(restaurant: Restaurant, values: Rest
 }
 
 export async function deleteOwnerRestaurant(restaurant: Restaurant) {
-  if (restaurant.imageUrl.startsWith("/uploads/restaurants/")) {
-    const filePath = path.join(process.cwd(), "public", restaurant.imageUrl.replace(/^\//, ""));
-    await unlink(filePath).catch(() => undefined);
-  }
+  await removeLocalUpload(restaurant.imageUrl);
 
   return prisma.restaurant.delete({
     where: { id: restaurant.id },
