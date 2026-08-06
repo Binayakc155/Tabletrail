@@ -67,8 +67,8 @@
   --color-border: hsl(var(--border));
   --color-input: hsl(var(--input));
   --color-ring: hsl(var(--ring));
-  --font-sans: var(--font-plus-jakarta-sans);
-  --font-mono: var(--font-ibm-plex-mono);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
 }
 
 @layer base {
@@ -87,7 +87,7 @@
       radial-gradient(circle at top right, hsl(var(--accent-foreground) / 0.08), transparent 34%),
       linear-gradient(180deg, hsl(var(--background)) 0%, hsl(var(--background)) 100%);
     background-attachment: fixed;
-    font-family: var(--font-plus-jakarta-sans), sans-serif;
+    font-family: var(--font-geist-sans), sans-serif;
   }
 
   ::selection {

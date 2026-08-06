@@ -70,11 +70,11 @@ export function RestaurantList({ restaurants }: { restaurants: OwnerRestaurant[]
 
   return (
     <section id="restaurants" className="space-y-5">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div>
+      <div className="flex flex-col gap-4 rounded-[16px] border border-slate-200/80 bg-white/90 p-5 shadow-[0_16px_40px_-26px_rgba(15,23,42,0.28)] sm:flex-row sm:items-end sm:justify-between">
+        <div className="space-y-2">
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-orange-600">Restaurant management</p>
-          <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-950">Restaurant entries</h2>
-          <p className="mt-1 text-sm text-slate-500">Manage listings, images, status, menus, and performance shortcuts.</p>
+          <h2 className="text-2xl font-semibold tracking-tight text-slate-950">Restaurant portfolio</h2>
+          <p className="max-w-2xl text-sm leading-6 text-slate-500">Manage live listings, menu updates, cover images, and review performance from a single workspace.</p>
         </div>
         <AddRestaurantDialog open={addOpen} onOpenChange={setAddOpen} onSaved={(message) => showToast("success", message)} />
       </div>
@@ -108,12 +108,23 @@ export function RestaurantList({ restaurants }: { restaurants: OwnerRestaurant[]
           ))}
         </div>
       ) : (
-        <div className="rounded-3xl border border-dashed border-slate-300 bg-white/70 p-10 text-center">
-          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-orange-100 text-orange-600">
-            <Store className="h-6 w-6" />
+        <div className="rounded-[16px] border border-dashed border-slate-300 bg-white/85 p-10 text-center shadow-[0_12px_32px_-24px_rgba(15,23,42,0.2)]">
+          <div className="mx-auto mb-5 flex w-fit items-center justify-center rounded-[20px] border border-slate-200 bg-slate-50 p-4">
+            <div className="relative h-16 w-24">
+              <div className="absolute inset-x-0 bottom-0 h-10 rounded-[16px] border border-slate-200 bg-white shadow-sm" />
+              <div className="absolute left-3 top-0 h-8 w-8 rounded-[12px] bg-slate-900" />
+              <div className="absolute right-1 top-2 h-6 w-6 rounded-full border border-orange-200 bg-orange-100" />
+              <Store className="absolute bottom-2 left-1/2 h-7 w-7 -translate-x-1/2 text-slate-600" />
+            </div>
           </div>
-          <h3 className="mt-4 text-lg font-semibold text-slate-950">No restaurants found</h3>
-          <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-500">Try adjusting the search or create your first listing from the Add Restaurant button.</p>
+          <h3 className="mt-4 text-lg font-semibold text-slate-950">You haven&apos;t added any restaurants yet.</h3>
+          <p className="mx-auto mt-2 max-w-lg text-sm leading-6 text-slate-500">Create your first restaurant to start receiving reviews, favorites, and customer engagement data.</p>
+          <div className="mt-6 flex justify-center">
+            <Button className="rounded-[16px] bg-orange-500 px-5 text-white hover:bg-orange-600" onClick={() => setAddOpen(true)}>
+              <Store className="h-4 w-4" />
+              Add Restaurant
+            </Button>
+          </div>
         </div>
       )}
 
@@ -174,7 +185,7 @@ export function RestaurantList({ restaurants }: { restaurants: OwnerRestaurant[]
       </Dialog>
 
       {toast ? (
-        <div className={cn("fixed right-4 top-20 z-50 rounded-2xl border px-4 py-3 text-sm font-medium shadow-xl backdrop-blur", toast.type === "success" ? "border-emerald-200 bg-emerald-50/95 text-emerald-700" : "border-rose-200 bg-rose-50/95 text-rose-700")}>
+        <div className={cn("fixed right-4 top-20 z-50 rounded-[16px] border px-4 py-3 text-sm font-medium shadow-[0_16px_40px_-26px_rgba(15,23,42,0.35)] backdrop-blur", toast.type === "success" ? "border-emerald-200 bg-emerald-50/95 text-emerald-700" : "border-rose-200 bg-rose-50/95 text-rose-700")}>
           {toast.message}
         </div>
       ) : null}

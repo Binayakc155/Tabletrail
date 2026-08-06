@@ -2,53 +2,77 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
 import { SignOutButton } from "@clerk/nextjs";
-import { BarChart3, LayoutDashboard, LogOut, MenuSquare, MessageSquareText, Settings, Store } from "lucide-react";
+import { BarChart3, HelpCircle, LayoutDashboard, LogOut, MenuSquare, MessageSquareText, ShoppingCart, Settings, Store, Users } from "lucide-react";
 
+import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
 const navigation = [
-  { label: "Dashboard", href: "/owner", icon: LayoutDashboard },
-  { label: "Restaurants", href: "/owner#restaurants", icon: Store },
-  { label: "Menu Management", href: "/owner#restaurants", icon: MenuSquare },
-  { label: "Reviews", href: "/owner#reviews", icon: MessageSquareText },
-  { label: "Analytics", href: "/owner#analytics", icon: BarChart3 },
-  { label: "Settings", href: "/owner#settings", icon: Settings },
+  { label: "Dashboard", href: "#overview", icon: LayoutDashboard },
+  { label: "Restaurants", href: "#restaurants", icon: Store },
+  { label: "Menu Management", href: "#restaurants", icon: MenuSquare },
+  { label: "Reviews", href: "#reviews", icon: MessageSquareText },
+  { label: "Analytics", href: "#analytics", icon: BarChart3 },
+  { label: "Orders", href: "#orders", icon: ShoppingCart, meta: "Soon" },
+  { label: "Customers", href: "#customers", icon: Users },
+  { label: "Settings", href: "#settings", icon: Settings },
+  { label: "Help Center", href: "#help", icon: HelpCircle },
 ];
 
 export function OwnerSidebar() {
   const pathname = usePathname();
+  const [activeHash, setActiveHash] = useState("#overview");
+
+  useEffect(() => {
+    const updateHash = () => setActiveHash(window.location.hash || "#overview");
+
+    updateHash();
+    window.addEventListener("hashchange", updateHash);
+
+    return () => window.removeEventListener("hashchange", updateHash);
+  }, []);
+
+  const activeSection = useMemo(() => (pathname.startsWith("/owner") ? activeHash : "#overview"), [activeHash, pathname]);
 
   return (
-    <aside className="fixed inset-x-3 bottom-3 z-40 rounded-3xl border border-white/10 bg-slate-950/95 p-2 shadow-2xl shadow-slate-950/25 backdrop-blur lg:inset-y-4 lg:left-4 lg:right-auto lg:flex lg:w-64 lg:flex-col lg:p-4">
-      <div className="hidden px-3 py-4 lg:block">
-        <div className="flex items-center gap-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-500 to-rose-600 text-white shadow-lg shadow-orange-950/25">
+    <aside className="fixed inset-x-3 bottom-3 z-40 rounded-[18px] border border-slate-200 bg-white/92 p-3 text-slate-950 shadow-[0_10px_28px_-22px_rgba(15,23,42,0.28)] backdrop-blur lg:inset-y-4 lg:left-4 lg:right-auto lg:flex lg:w-[18rem] lg:flex-col lg:p-4">
+      <div className="hidden lg:block">
+        <div className="flex items-center gap-3 rounded-[16px] px-2 py-2">
+          <div className="flex h-10 w-10 items-center justify-center rounded-[14px] bg-slate-950 text-white">
             <Store className="h-5 w-5" />
           </div>
-          <div>
-            <p className="text-sm font-semibold text-white">Restaurant Owner</p>
-            <p className="text-xs text-slate-400">Dashboard</p>
+          <div className="min-w-0">
+            <p className="truncate text-sm font-semibold text-slate-950">TableTrail Owner</p>
+            <p className="truncate text-xs text-slate-500">Restaurant management console</p>
           </div>
         </div>
       </div>
 
-      <nav className="grid grid-cols-6 gap-1 lg:mt-6 lg:flex lg:flex-col lg:gap-2">
+      <nav className="mt-2 grid grid-cols-4 gap-1 lg:mt-5 lg:flex lg:flex-col lg:gap-1">
         {navigation.map((item) => {
           const Icon = item.icon;
-          const isActive = item.href === "/owner" && (pathname === "/owner" || pathname === "/owner/dashboard");
+          const isActive = activeSection === item.href || ((item.href === "#overview" || item.href === "#dashboard") && (activeSection === "#overview" || activeSection === "#dashboard"));
 
           return (
             <Link
               key={item.label}
               href={item.href}
               className={cn(
-                "group flex min-h-12 items-center justify-center rounded-2xl px-2 text-slate-400 transition duration-200 hover:-translate-y-0.5 hover:bg-white/10 hover:text-white lg:justify-start lg:gap-3 lg:px-3",
-                isActive && "bg-gradient-to-r from-orange-500 to-rose-600 text-white shadow-lg shadow-orange-950/30"
+                "group relative flex min-h-12 items-center justify-center rounded-[14px] px-2 text-slate-500 transition duration-200 hover:bg-slate-100 hover:text-slate-950 lg:justify-start lg:gap-3 lg:px-3",
+                isActive && "bg-orange-50 text-slate-950 ring-1 ring-orange-200"
               )}
+              onClick={() => setActiveHash(item.href)}
+              aria-current={isActive ? "page" : undefined}
             >
               <Icon className="h-5 w-5 shrink-0" />
-              <span className="hidden truncate text-sm font-medium lg:block">{item.label}</span>
+              <span className="hidden min-w-0 truncate text-sm font-medium lg:block">{item.label}</span>
+              {"meta" in item ? (
+                <Badge variant="outline" className="ml-auto hidden border-slate-200 bg-slate-50 px-2 py-0.5 text-[11px] text-slate-500 lg:inline-flex">
+                  {item.meta}
+                </Badge>
+              ) : null}
             </Link>
           );
         })}
@@ -58,7 +82,7 @@ export function OwnerSidebar() {
         <SignOutButton>
           <button
             type="button"
-            className="flex min-h-12 w-full items-center gap-3 rounded-2xl px-3 text-sm font-medium text-slate-400 transition duration-200 hover:bg-rose-500/15 hover:text-rose-200"
+            className="flex min-h-12 w-full items-center gap-3 rounded-[14px] border border-slate-200 px-3 text-sm font-medium text-slate-600 transition duration-200 hover:bg-rose-50 hover:text-rose-700"
           >
             <LogOut className="h-5 w-5" />
             Sign out

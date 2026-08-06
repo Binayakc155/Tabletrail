@@ -22,7 +22,7 @@ export function AddRestaurantDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>
-        <Button className="rounded-2xl bg-gradient-to-r from-orange-500 to-rose-600 shadow-lg shadow-orange-950/20 hover:from-orange-600 hover:to-rose-700">
+        <Button className="rounded-[16px] bg-orange-500 shadow-none hover:bg-orange-600">
           <Plus className="h-4 w-4" />
           Add Restaurant
         </Button>

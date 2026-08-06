@@ -16,7 +16,9 @@ export type OwnerRestaurant = {
   status: string;
   rating: number;
   reviewCount: number;
+  favoritesCount: number;
   createdAt: string;
+  updatedAt: string;
 };
 
 export type OwnerStats = {
@@ -25,4 +27,7 @@ export type OwnerStats = {
   totalFavorites: number;
   averageRating: number | null;
   monthlyGrowth: number;
+  activeCustomers: number;
+  monthlyRevenue: number;
+  approvedRestaurants: number;
 };
