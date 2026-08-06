@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { auth, clerkClient } from "@clerk/nextjs/server";
+import { auth } from "@clerk/nextjs/server";
 
 import { AuthPageShell } from "@/components/auth/auth-page-shell";
 import { RoleAwareSignIn } from "@/components/auth/role-aware-auth";
 import { siteConfig } from "@/config/site";
-import { getClerkUserRole, roleDashboardPath } from "@/lib/auth-roles";
+import { roleDashboardPath } from "@/lib/auth-roles";
+import { getCurrentAppUser } from "@/lib/clerk-auth";
 
 export const metadata: Metadata = {
   title: `Login | ${siteConfig.name}`,
@@ -22,13 +23,14 @@ export default async function LoginPage({
 }) {
   const { userId } = await auth();
   const resolvedSearchParams = await searchParams;
+  const selectedRole = resolvedSearchParams?.role;
 
   if (userId) {
-    const client = await clerkClient();
-    const user = await client.users.getUser(userId);
-    const role = getClerkUserRole(user.publicMetadata);
+    const user = await getCurrentAppUser();
 
-    redirect(roleDashboardPath(role));
+    if (user) {
+      redirect(roleDashboardPath(user.role));
+    }
   }
 
   return (

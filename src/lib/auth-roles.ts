@@ -4,6 +4,12 @@ export const selfServiceUserRoles = ["customer", "restaurant_owner"] as const;
 export type UserRole = (typeof userRoles)[number];
 export type SelfServiceUserRole = (typeof selfServiceUserRoles)[number];
 
+const rolePriority: Record<UserRole, number> = {
+  customer: 0,
+  restaurant_owner: 1,
+  admin: 2,
+};
+
 export function isUserRole(value: unknown): value is UserRole {
   return typeof value === "string" && userRoles.includes(value as UserRole);
 }
@@ -36,4 +42,18 @@ export function roleDashboardPath(role?: string | null) {
   if (role === "restaurant_owner") return "/owner/dashboard";
   if (role === "admin") return "/admin";
   return "/customer/dashboard";
+}
+
+export function preferHigherRole(...roles: Array<UserRole | null | undefined>): UserRole {
+  let resolvedRole: UserRole = "customer";
+
+  for (const role of roles) {
+    if (!role) continue;
+
+    if (rolePriority[role] > rolePriority[resolvedRole]) {
+      resolvedRole = role;
+    }
+  }
+
+  return resolvedRole;
 }

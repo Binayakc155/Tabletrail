@@ -2,7 +2,7 @@ import { auth, clerkClient, currentUser } from "@clerk/nextjs/server";
 
 import { prisma } from "@/lib/prisma";
 import type { UserRole } from "@/lib/auth-roles";
-import { getClerkSignUpRole, getClerkUserRole, isUserRole } from "@/lib/auth-roles";
+import { getClerkSignUpRole, getClerkUserRole, isUserRole, preferHigherRole } from "@/lib/auth-roles";
 
 export type AppUser = {
   id: string;
@@ -26,22 +26,24 @@ export async function getCurrentAppUser(): Promise<AppUser | null> {
 
   const email = user.primaryEmailAddress?.emailAddress ?? user.emailAddresses[0]?.emailAddress ?? null;
   const name = user.fullName ?? ([user.firstName, user.lastName].filter(Boolean).join(" ") || null);
-  let role = getClerkUserRole(user.publicMetadata);
+  const localUser = await prisma.user.findUnique({
+    where: { id: user.id },
+    select: { role: true },
+  });
 
-  if (!isUserRole(user.publicMetadata.role)) {
-    const signUpRole = getClerkSignUpRole(user.unsafeMetadata);
+  let role = preferHigherRole(localUser?.role, getClerkUserRole(user.publicMetadata));
+  const signUpRole = getClerkSignUpRole(user.unsafeMetadata);
 
-    if (signUpRole) {
-      const client = await clerkClient();
+  if (signUpRole && preferHigherRole(role, signUpRole) === signUpRole && signUpRole !== role) {
+    const client = await clerkClient();
 
-      await client.users.updateUserMetadata(user.id, {
-        publicMetadata: {
-          role: signUpRole,
-        },
-      });
+    await client.users.updateUserMetadata(user.id, {
+      publicMetadata: {
+        role: signUpRole,
+      },
+    });
 
-      role = signUpRole;
-    }
+    role = signUpRole;
   }
 
   return {
@@ -69,6 +71,17 @@ export async function ensureLocalUser(user: AppUser) {
     throw new Error("A verified email address is required.");
   }
 
+  const existingUser = await prisma.user.findUnique({
+    where: {
+      id: user.id,
+    },
+    select: {
+      role: true,
+    },
+  });
+
+  const role = preferHigherRole(existingUser?.role, user.role);
+
   return prisma.user.upsert({
     where: {
       id: user.id,
@@ -76,13 +89,13 @@ export async function ensureLocalUser(user: AppUser) {
     update: {
       email: user.email,
       name: user.name,
-      role: user.role,
+      role,
     },
     create: {
       id: user.id,
       email: user.email,
       name: user.name,
-      role: user.role,
+      role,
     },
   });
 }

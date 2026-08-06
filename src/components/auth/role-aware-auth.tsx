@@ -73,11 +73,17 @@ export function RoleAwareSignIn({
 }) {
   const [selectedRole, setSelectedRole] = useState<SelfServiceUserRole>(() => getSelfServiceRole(initialRole));
   const signUpUrl = useMemo(() => `/register?role=${selectedRole}`, [selectedRole]);
+  const dashboardPath = roleDashboardPath(selectedRole);
 
   return (
     <>
       <RoleSelector selectedRole={selectedRole} onSelectRole={setSelectedRole} />
-      <SignIn signUpUrl={signUpUrl} fallbackRedirectUrl="/dashboard" forceRedirectUrl="/dashboard" />
+      <SignIn
+        key={selectedRole}
+        signUpUrl={signUpUrl}
+        fallbackRedirectUrl={dashboardPath}
+        forceRedirectUrl={dashboardPath}
+      />
     </>
   );
 }
