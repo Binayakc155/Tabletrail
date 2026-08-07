@@ -6,7 +6,7 @@ import { AuthPageShell } from "@/components/auth/auth-page-shell";
 import { RoleAwareSignUp } from "@/components/auth/role-aware-auth";
 import { siteConfig } from "@/config/site";
 import { ensureLocalUser, getCurrentAppUser } from "@/lib/clerk-auth";
-import { isSelfServiceUserRole, roleDashboardPath } from "@/lib/auth-roles";
+import { roleDashboardPath } from "@/lib/auth-roles";
 
 export const metadata: Metadata = {
   title: `Create account | ${siteConfig.name}`,
@@ -14,46 +14,32 @@ export const metadata: Metadata = {
     "Create a secure restaurant platform account.",
 };
 
-export default async function RegisterPage({
-  searchParams,
-}: {
-  searchParams?: Promise<{
-    role?: string;
-  }>;
-}) {
+export default async function RegisterPage() {
   const { userId } = await auth();
-  const resolvedSearchParams = await searchParams;
-  const selectedRole = isSelfServiceUserRole(resolvedSearchParams?.role) ? resolvedSearchParams.role : null;
 
   if (userId) {
     const user = await getCurrentAppUser();
 
     if (user) {
-      const role = selectedRole === "restaurant_owner" ? "restaurant_owner" : user.role;
-
-      await ensureLocalUser({
-        ...user,
-        role,
-      });
-
-      redirect(roleDashboardPath(role));
+      await ensureLocalUser(user);
+      redirect(roleDashboardPath(user.role));
     }
   }
 
   return (
     <AuthPageShell
       badge="Start here"
-      title="Create your TableTrail account"
-      description="Choose your role and create your account."
+      title="Register your restaurant"
+      description="Create an owner account to manage your restaurant listing."
       highlights={[
-        "Customer account",
         "Restaurant owner account",
+        "Menu and listing management",
         "Secure authentication with Clerk",
       ]}
       formTitle="Create account"
-      formDescription="Select your role before signing up."
+      formDescription="Customer accounts are not offered."
     >
-      <RoleAwareSignUp initialRole={resolvedSearchParams?.role} />
+      <RoleAwareSignUp />
     </AuthPageShell>
   );
 }

@@ -1,13 +1,13 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
-import { ensureLocalUser, getCurrentAppUser } from "@/lib/clerk-auth";
 import { prisma } from "@/lib/prisma";
 import { refreshRestaurantRating } from "@/lib/reviews";
 
 const reviewSchema = z.object({
   rating: z.coerce.number().int().min(1).max(5),
   comment: z.string().min(5).max(2000),
+  guestName: z.string().trim().min(2).max(80).optional(),
 });
 
 export async function GET(_: Request, { params }: { params: Promise<{ id: string }> }) {
@@ -23,12 +23,6 @@ export async function GET(_: Request, { params }: { params: Promise<{ id: string
 
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const user = await getCurrentAppUser();
-
-  if (!user) {
-    return NextResponse.json({ message: "Unauthorized." }, { status: 401 });
-  }
-
   const body = await request.json();
   const parsed = reviewSchema.safeParse(body);
 
@@ -36,17 +30,13 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     return NextResponse.json({ message: parsed.error.issues[0]?.message ?? "Invalid review." }, { status: 400 });
   }
 
-  await ensureLocalUser(user);
-  const review = await prisma.review.upsert({
-    where: { restaurantId_userId: { restaurantId: id, userId: user.id } },
-    update: parsed.data,
-    create: {
-      ...parsed.data,
-      restaurantId: id,
-      userId: user.id,
-    },
+  const restaurant = await prisma.restaurant.findFirst({ where: { id, status: "approved" }, select: { id: true } });
+  if (!restaurant) return NextResponse.json({ message: "Restaurant not found." }, { status: 404 });
+
+  const review = await prisma.review.create({
+    data: { rating: parsed.data.rating, comment: parsed.data.comment, guestName: parsed.data.guestName || "Anonymous diner", status: "approved", restaurantId: id },
   });
   await refreshRestaurantRating(id);
 
-  return NextResponse.json({ review }, { status: 201 });
+  return NextResponse.json({ review, message: "Thanks for sharing your review!" }, { status: 201 });
 }

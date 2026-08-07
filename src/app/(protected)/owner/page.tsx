@@ -226,6 +226,29 @@ export default async function OwnerPage() {
         totalReviews={stats.totalReviews}
       />
 
+      <section id="reviews" className="rounded-[16px] border border-slate-200/80 bg-white/90 p-5 shadow-[0_16px_40px_-26px_rgba(15,23,42,0.28)] lg:p-6">
+        <div className="flex items-end justify-between gap-4">
+          <div>
+            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-orange-600">Customer feedback</p>
+            <h2 className="mt-1 text-2xl font-semibold tracking-tight text-slate-950">Recent reviews</h2>
+          </div>
+          <Badge variant="outline" className="rounded-full">{reviewCount} total</Badge>
+        </div>
+        <div className="mt-5 grid gap-3 md:grid-cols-2">
+          {recentReviews.map((review) => (
+            <article key={review.id} className="rounded-[16px] border border-slate-200 bg-slate-50 p-4">
+              <div className="flex items-center justify-between gap-3">
+                <p className="font-semibold text-slate-950">{review.guestName ?? review.user?.name ?? "Anonymous diner"}</p>
+                <span className="text-sm font-semibold text-amber-600">{review.rating}/5</span>
+              </div>
+              <p className="mt-1 text-xs text-slate-500">{review.restaurant.name}</p>
+              <p className="mt-3 text-sm leading-6 text-slate-600">{review.comment}</p>
+            </article>
+          ))}
+          {recentReviews.length === 0 ? <p className="text-sm text-slate-500">No customer reviews yet.</p> : null}
+        </div>
+      </section>
+
       <RestaurantList restaurants={ownerRestaurants} />
 
       <section id="help" className="grid gap-4 rounded-[16px] border border-slate-200/80 bg-white/90 p-5 shadow-[0_16px_40px_-26px_rgba(15,23,42,0.28)] lg:grid-cols-[0.8fr_1.2fr] lg:p-6">

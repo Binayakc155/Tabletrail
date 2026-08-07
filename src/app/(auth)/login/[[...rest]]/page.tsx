@@ -9,21 +9,12 @@ import { roleDashboardPath } from "@/lib/auth-roles";
 import { getCurrentAppUser } from "@/lib/clerk-auth";
 
 export const metadata: Metadata = {
-  title: `Login | ${siteConfig.name}`,
-  description:
-    "Sign in to manage restaurant listings, saved places, and admin workflows.",
+  title: `Staff sign in | ${siteConfig.name}`,
+  description: "Sign in to manage restaurant listings or access administration.",
 };
 
-export default async function LoginPage({
-  searchParams,
-}: {
-  searchParams?: Promise<{
-    role?: string;
-  }>;
-}) {
+export default async function LoginPage() {
   const { userId } = await auth();
-  const resolvedSearchParams = await searchParams;
-  const selectedRole = resolvedSearchParams?.role;
 
   if (userId) {
     const user = await getCurrentAppUser();
@@ -36,17 +27,17 @@ export default async function LoginPage({
   return (
     <AuthPageShell
       badge="Welcome back"
-      title="Log in to TableTrail"
-      description="Access your account securely."
+      title="Staff sign in"
+      description="For restaurant owners and administrators."
       highlights={[
-        "Resume saved sessions",
         "Restaurant management",
-        "Customer dashboard",
+        "Admin dashboard",
+        "Secure access",
       ]}
       formTitle="Sign in"
-      formDescription="Sign in with your Clerk account."
+      formDescription="Customer accounts are not required to browse TableTrail."
     >
-      <RoleAwareSignIn initialRole={resolvedSearchParams?.role} />
+      <RoleAwareSignIn />
     </AuthPageShell>
   );
 }

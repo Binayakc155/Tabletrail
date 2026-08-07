@@ -58,10 +58,7 @@ export function SiteHeader() {
           ) : (
             <>
               <Button asChild variant="outline">
-                <Link href="/login">Sign in</Link>
-              </Button>
-              <Button asChild variant="outline">
-                <Link href="/register">Create account</Link>
+                <Link href="/login">Owner / admin access</Link>
               </Button>
             </>
           )}
@@ -127,14 +124,7 @@ export function SiteHeader() {
                 className="rounded-2xl px-4 py-3 text-sm font-medium text-foreground transition-colors hover:bg-accent"
                 onClick={() => setIsMenuOpen(false)}
               >
-                Sign in
-              </Link>
-              <Link
-                href="/register"
-                className="rounded-2xl px-4 py-3 text-sm font-medium text-foreground transition-colors hover:bg-accent"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Create account
+                Owner / admin access
               </Link>
             </>
           )}
@@ -147,7 +137,7 @@ export function SiteHeader() {
               </SignOutButton>
             ) : (
               <Button asChild variant="outline" className="flex-1">
-                <Link href="/login" onClick={() => setIsMenuOpen(false)}>Sign in</Link>
+                <Link href="/login" onClick={() => setIsMenuOpen(false)}>Owner / admin</Link>
               </Button>
             )}
             <Button asChild className="flex-1">

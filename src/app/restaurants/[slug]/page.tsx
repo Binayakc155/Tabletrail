@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { RestaurantCard } from "@/features/restaurants/components/restaurant-card";
+import { GuestReviewForm } from "@/components/restaurants/guest-review-form";
 import { getRestaurantDetails } from "@/features/restaurants/data/restaurants";
 import { siteConfig } from "@/config/site";
 
@@ -160,7 +161,7 @@ export default async function RestaurantPage({ params }: { params: Promise<{ slu
                 {restaurant.reviews.slice(0, 5).map((review) => (
                   <div key={review.id} className="rounded-lg border border-border p-4">
                     <div className="mb-2 flex items-center justify-between gap-3">
-                      <p className="font-medium">{review.user.name ?? "Verified diner"}</p>
+                      <p className="font-medium">{review.guestName ?? review.user?.name ?? "Anonymous diner"}</p>
                       <span className="inline-flex items-center gap-1 text-sm text-muted-foreground">
                         <Star className="h-4 w-4 fill-current text-amber-400" />
                         {review.rating}
@@ -170,6 +171,7 @@ export default async function RestaurantPage({ params }: { params: Promise<{ slu
                   </div>
                 ))}
                 {restaurant.reviews.length === 0 ? <p className="text-sm text-muted-foreground">No reviews yet.</p> : null}
+                <GuestReviewForm restaurantId={restaurant.id} />
               </div>
             </CardContent>
           </Card>

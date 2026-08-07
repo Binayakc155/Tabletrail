@@ -11,6 +11,17 @@ export type AppUser = {
   role: UserRole;
 };
 
+function isAllowedAdmin(email: string | null) {
+  if (!email) return false;
+  const adminEmails = (process.env.ADMIN_EMAILS ?? "")
+    .split(",")
+    .map((value) => value.trim().toLowerCase())
+    .filter(Boolean)
+    .slice(0, 2);
+
+  return adminEmails.includes(email.toLowerCase());
+}
+
 export async function getCurrentAppUser(): Promise<AppUser | null> {
   const { userId } = await auth();
 
@@ -31,7 +42,8 @@ export async function getCurrentAppUser(): Promise<AppUser | null> {
     select: { role: true },
   });
 
-  let role = preferHigherRole(localUser?.role, getClerkUserRole(user.publicMetadata));
+  const clerkRole = getClerkUserRole(user.publicMetadata);
+  let role = preferHigherRole(localUser?.role, clerkRole);
   const signUpRole = getClerkSignUpRole(user.unsafeMetadata);
 
   if (signUpRole && preferHigherRole(role, signUpRole) === signUpRole && signUpRole !== role) {
@@ -44,6 +56,13 @@ export async function getCurrentAppUser(): Promise<AppUser | null> {
     });
 
     role = signUpRole;
+  }
+
+  // Admin access is limited to the first two addresses in ADMIN_EMAILS.
+  if (isAllowedAdmin(email)) {
+    role = "admin";
+  } else if (role === "admin") {
+    role = clerkRole === "admin" ? "customer" : clerkRole;
   }
 
   return {

@@ -18,6 +18,12 @@ enum RestaurantStatus {
   rejected
 }
 
+enum ReviewStatus {
+  pending
+  approved
+  rejected
+}
+
 model User {
   id            String    @id @default(cuid())
   name          String?
@@ -136,17 +142,20 @@ model Review {
   id           String   @id @default(cuid())
   rating       Int
   comment      String
+  guestName    String?
+  status       ReviewStatus @default(approved)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
   restaurantId String
-  userId       String
+  userId       String?
 
   restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
-  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user       User?      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([restaurantId, userId])
   @@index([restaurantId])
   @@index([userId])
+  @@index([status])
 }
 
 model Favorite {
