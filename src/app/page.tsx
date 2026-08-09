@@ -5,10 +5,33 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { RestaurantGrid } from "@/features/restaurants/components/restaurant-grid";
-import { featuredRestaurants } from "@/features/restaurants/data/mock-restaurants";
+import type { RestaurantSummary } from "@/features/restaurants/types";
 import { siteConfig } from "@/config/site";
+import { prisma } from "@/lib/prisma";
 
-export default function Home() {
+export const dynamic = "force-dynamic";
+
+export default async function Home() {
+  const approvedRestaurants = await prisma.restaurant.findMany({
+    where: { status: "approved" },
+    include: { images: { orderBy: [{ isCover: "desc" }, { createdAt: "asc" }] } },
+    orderBy: [{ isFeatured: "desc" }, { rating: "desc" }, { updatedAt: "desc" }],
+    take: 4,
+  });
+  const featuredRestaurants: RestaurantSummary[] = approvedRestaurants.map((restaurant) => ({
+    id: restaurant.id,
+    name: restaurant.name,
+    slug: restaurant.slug,
+    cuisine: restaurant.cuisine,
+    city: restaurant.city,
+    rating: restaurant.rating,
+    reviewCount: restaurant.reviewCount,
+    priceLevel: restaurant.priceLevel,
+    description: restaurant.description,
+    imageUrl: restaurant.images[0]?.url ?? restaurant.imageUrl,
+    address: restaurant.address,
+    openingHours: restaurant.openingHours,
+  }));
   const platformStats = [
     { label: "Verified restaurants", value: "1.2k+" },
     { label: "Average rating", value: "4.8/5" },
@@ -100,6 +123,7 @@ export default function Home() {
                 </span>
               </div>
             ))}
+            {featuredRestaurants.length === 0 ? <p className="text-sm text-white/70">Approved restaurants will appear here soon.</p> : null}
           </CardContent>
         </Card>
       </section>
@@ -141,7 +165,7 @@ export default function Home() {
             </Link>
           </Button>
         </div>
-        <RestaurantGrid restaurants={featuredRestaurants} />
+        {featuredRestaurants.length ? <RestaurantGrid restaurants={featuredRestaurants} /> : <p className="rounded-2xl border border-dashed border-border p-8 text-center text-sm text-muted-foreground">No approved restaurants are available yet.</p>}
       </section>
 
       <section id="reviews" className="mt-20 grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">

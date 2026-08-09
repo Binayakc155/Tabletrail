@@ -40,7 +40,7 @@ export function GuestReviewForm({ restaurantId }: { restaurantId: string }) {
     <form className="space-y-4 rounded-2xl border border-slate-200 bg-slate-50 p-4" onSubmit={submit}>
       <div className="flex items-center justify-between gap-3"><div><h3 className="font-semibold">Share your experience</h3><p className="text-sm text-muted-foreground">No account needed. Your review is published immediately.</p></div><div className="flex gap-1" aria-label={`${rating} out of 5 stars`}>{[1, 2, 3, 4, 5].map((value) => <button key={value} type="button" className="p-1" onClick={() => setRating(value)} aria-label={`${value} star rating`}><Star className={`h-5 w-5 ${value <= rating ? "fill-amber-400 text-amber-400" : "text-slate-300"}`} /></button>)}</div></div>
       <div className="space-y-2"><Label htmlFor="guest-name">Name (optional)</Label><Input id="guest-name" name="guestName" maxLength={80} placeholder="Anonymous diner" /></div>
-      <div className="space-y-2"><Label htmlFor="guest-comment">Review</Label><Textarea id="guest-comment" name="comment" minLength={5} maxLength={2000} required placeholder="Tell other diners about your visit." /></div>
+      <div className="space-y-2"><Label htmlFor="guest-comment">Review (optional)</Label><Textarea id="guest-comment" name="comment" maxLength={2000} placeholder="Tell other diners about your visit." /></div>
       {error ? <p role="alert" className="text-sm text-rose-700">{error}</p> : null}{message ? <p className="text-sm text-emerald-700">{message}</p> : null}
       <Button type="submit" disabled={pending}>{pending ? <Loader2 className="h-4 w-4 animate-spin" /> : null} Submit review</Button>
     </form>

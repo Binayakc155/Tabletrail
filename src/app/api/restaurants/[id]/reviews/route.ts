@@ -6,8 +6,8 @@ import { refreshRestaurantRating } from "@/lib/reviews";
 
 const reviewSchema = z.object({
   rating: z.coerce.number().int().min(1).max(5),
-  comment: z.string().min(5).max(2000),
-  guestName: z.string().trim().min(2).max(80).optional(),
+  comment: z.string().trim().max(2000).optional().default(""),
+  guestName: z.string().trim().max(80).optional(),
 });
 
 export async function GET(_: Request, { params }: { params: Promise<{ id: string }> }) {

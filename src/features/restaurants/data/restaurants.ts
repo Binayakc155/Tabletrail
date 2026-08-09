@@ -150,7 +150,7 @@ function buildMockRestaurantDetails(slug: string) {
 }
 
 function shouldUseMockRestaurantData() {
-  return process.env.NODE_ENV !== "production" && process.env.USE_LIVE_RESTAURANTS !== "true";
+  return process.env.USE_MOCK_RESTAURANTS === "true";
 }
 
 export async function listRestaurants(params: RestaurantSearchParams = {}) {

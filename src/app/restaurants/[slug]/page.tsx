@@ -107,34 +107,44 @@ export default async function RestaurantPage({ params }: { params: Promise<{ slu
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
-              {restaurant.menus.flatMap((menu) => [
-                ...menu.categories.map((category) => (
-                  <div key={category.id}>
-                    <h3 className="mb-3 font-semibold">{category.name}</h3>
-                    <div className="grid gap-3">
-                      {category.items.map((item) => (
-                        <div key={item.id} className="flex justify-between gap-4 border-b border-border pb-3">
-                          <div>
-                            <p className="font-medium">{item.name}</p>
-                            {item.description ? <p className="text-sm text-muted-foreground">{item.description}</p> : null}
+              {restaurant.menus.map((menu) => (
+                <section key={menu.id} className="space-y-4">
+                  <h3 className="font-semibold">{menu.title}</h3>
+                  {menu.imageUrl ? (
+                    <a href={menu.imageUrl} target="_blank" rel="noreferrer" className="block">
+                      <div className="relative aspect-[3/4] max-w-md overflow-hidden rounded-lg border border-border">
+                        <Image src={menu.imageUrl} alt={`${menu.title} for ${restaurant.name}`} fill className="object-contain" sizes="(max-width: 768px) 100vw, 448px" />
+                      </div>
+                    </a>
+                  ) : null}
+                  {menu.categories.map((category) => (
+                    <div key={category.id}>
+                      <h4 className="mb-3 font-semibold">{category.name}</h4>
+                      <div className="grid gap-3">
+                        {category.items.map((item) => (
+                          <div key={item.id} className="flex justify-between gap-4 border-b border-border pb-3">
+                            <div>
+                              <p className="font-medium">{item.name}</p>
+                              {item.description ? <p className="text-sm text-muted-foreground">{item.description}</p> : null}
+                            </div>
+                            <p className="font-semibold">${Number(item.price).toFixed(2)}</p>
                           </div>
-                          <p className="font-semibold">${Number(item.price).toFixed(2)}</p>
-                        </div>
-                      ))}
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                )),
-                ...menu.items.map((item) => (
-                  <div key={item.id} className="flex justify-between gap-4 border-b border-border pb-3">
-                    <div>
-                      <p className="font-medium">{item.name}</p>
-                      {item.description ? <p className="text-sm text-muted-foreground">{item.description}</p> : null}
+                  ))}
+                  {menu.items.map((item) => (
+                    <div key={item.id} className="flex justify-between gap-4 border-b border-border pb-3">
+                      <div>
+                        <p className="font-medium">{item.name}</p>
+                        {item.description ? <p className="text-sm text-muted-foreground">{item.description}</p> : null}
+                      </div>
+                      <p className="font-semibold">${Number(item.price).toFixed(2)}</p>
                     </div>
-                    <p className="font-semibold">${Number(item.price).toFixed(2)}</p>
-                  </div>
-                )),
-              ])}
-              {restaurant.menus.every((menu) => menu.categories.length === 0 && menu.items.length === 0) ? (
+                  ))}
+                </section>
+              ))}
+              {restaurant.menus.every((menu) => !menu.imageUrl && menu.categories.length === 0 && menu.items.length === 0) ? (
                 <p className="text-sm text-muted-foreground">Menu items have not been added yet.</p>
               ) : null}
             </CardContent>
