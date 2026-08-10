@@ -3,48 +3,48 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  --background: 38 43% 98%;
-  --foreground: 222 47% 11%;
-  --card: 0 0% 100%;
-  --card-foreground: 222 47% 11%;
-  --popover: 0 0% 100%;
-  --popover-foreground: 222 47% 11%;
-  --primary: 18 89% 55%;
+  --background: 224 43% 7%;
+  --foreground: 220 28% 95%;
+  --card: 225 34% 11%;
+  --card-foreground: 220 28% 95%;
+  --popover: 225 35% 10%;
+  --popover-foreground: 220 28% 95%;
+  --primary: 18 89% 58%;
   --primary-foreground: 0 0% 100%;
-  --secondary: 38 28% 94%;
-  --secondary-foreground: 222 47% 11%;
-  --muted: 37 23% 94%;
-  --muted-foreground: 215 16% 47%;
-  --accent: 34 30% 92%;
-  --accent-foreground: 222 47% 11%;
+  --secondary: 225 25% 16%;
+  --secondary-foreground: 220 28% 95%;
+  --muted: 225 27% 14%;
+  --muted-foreground: 219 17% 68%;
+  --accent: 228 31% 17%;
+  --accent-foreground: 220 28% 95%;
   --destructive: 0 84% 60%;
   --destructive-foreground: 0 0% 98%;
-  --border: 35 20% 86%;
-  --input: 35 20% 86%;
-  --ring: 18 89% 55%;
+  --border: 224 25% 24%;
+  --input: 224 25% 24%;
+  --ring: 224 92% 72%;
   --radius: 1rem;
 }
 
 .dark {
-  --background: 224 27% 8%;
-  --foreground: 40 32% 96%;
-  --card: 224 27% 10%;
-  --card-foreground: 40 32% 96%;
-  --popover: 224 27% 10%;
-  --popover-foreground: 40 32% 96%;
-  --primary: 18 89% 60%;
+  --background: 224 43% 7%;
+  --foreground: 220 28% 95%;
+  --card: 225 34% 11%;
+  --card-foreground: 220 28% 95%;
+  --popover: 225 35% 10%;
+  --popover-foreground: 220 28% 95%;
+  --primary: 18 89% 58%;
   --primary-foreground: 0 0% 100%;
-  --secondary: 223 24% 16%;
-  --secondary-foreground: 40 32% 96%;
-  --muted: 223 24% 16%;
-  --muted-foreground: 215 20% 72%;
-  --accent: 223 24% 16%;
-  --accent-foreground: 40 32% 96%;
+  --secondary: 225 25% 16%;
+  --secondary-foreground: 220 28% 95%;
+  --muted: 225 27% 14%;
+  --muted-foreground: 219 17% 68%;
+  --accent: 228 31% 17%;
+  --accent-foreground: 220 28% 95%;
   --destructive: 0 62% 52%;
   --destructive-foreground: 0 0% 98%;
-  --border: 223 18% 22%;
-  --input: 223 18% 22%;
-  --ring: 18 89% 60%;
+  --border: 224 25% 24%;
+  --input: 224 25% 24%;
+  --ring: 224 92% 72%;
 }
 
 @theme inline {
@@ -83,15 +83,109 @@
   body {
     @apply min-h-screen bg-background text-foreground antialiased;
     background-image:
-      radial-gradient(circle at top left, hsl(var(--primary) / 0.14), transparent 30%),
-      radial-gradient(circle at top right, hsl(var(--accent-foreground) / 0.08), transparent 34%),
-      linear-gradient(180deg, hsl(var(--background)) 0%, hsl(var(--background)) 100%);
+      radial-gradient(ellipse 70% 52% at 50% -16%, hsl(220 95% 62% / 0.2), transparent 66%),
+      radial-gradient(ellipse 44% 42% at 94% 16%, hsl(261 82% 66% / 0.13), transparent 72%),
+      radial-gradient(ellipse 38% 36% at 3% 38%, hsl(212 98% 62% / 0.09), transparent 74%),
+      linear-gradient(hsl(222 30% 75% / 0.035) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(222 30% 75% / 0.035) 1px, transparent 1px),
+      linear-gradient(180deg, hsl(224 43% 8%) 0%, hsl(226 43% 6%) 46%, hsl(224 43% 7%) 100%);
+    background-size: auto, auto, auto, 48px 48px, 48px 48px, auto;
     background-attachment: fixed;
     font-family: var(--font-geist-sans), sans-serif;
+    isolation: isolate;
+  }
+
+  body::before {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    content: "";
+    background:
+      radial-gradient(ellipse 82% 58% at 50% 10%, transparent 28%, hsl(224 43% 5% / 0.46) 100%),
+      linear-gradient(90deg, hsl(224 43% 5% / 0.22), transparent 24%, transparent 76%, hsl(224 43% 5% / 0.22));
+  }
+
+  .bg-\[\#fffaf3\] {
+    background-color: hsl(225 36% 9%) !important;
   }
 
   ::selection {
-    background: hsl(var(--primary) / 0.18);
+    background: hsl(222 95% 68% / 0.28);
     color: hsl(var(--foreground));
+  }
+}
+
+@media (max-width: 640px) {
+  @layer base {
+    body {
+      background-size: auto, auto, auto, 36px 36px, 36px 36px, auto;
+      background-attachment: scroll;
+    }
+  }
+}
+
+@layer components {
+  .owner-dashboard #overview {
+    position: relative;
+    overflow: hidden;
+    border-color: hsl(220 35% 86% / 0.1);
+    background: linear-gradient(135deg, hsl(226 42% 12% / 0.92), hsl(230 37% 9% / 0.8));
+    box-shadow: 0 22px 56px -30px rgb(2 6 23 / 0.82);
+    backdrop-filter: blur(18px);
+  }
+
+  .owner-dashboard #overview::before,
+  .owner-dashboard #overview::after {
+    position: absolute;
+    width: 18rem;
+    height: 18rem;
+    border-radius: 9999px;
+    pointer-events: none;
+    content: "";
+    filter: blur(54px);
+  }
+
+  .owner-dashboard #overview::before {
+    top: -10rem;
+    right: -5rem;
+    background: hsl(258 82% 65% / 0.17);
+  }
+
+  .owner-dashboard #overview::after {
+    bottom: -12rem;
+    left: -6rem;
+    background: hsl(24 94% 56% / 0.12);
+  }
+
+  .owner-dashboard #overview > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .owner-dashboard #overview h1,
+  .owner-dashboard #overview .text-slate-950 {
+    color: hsl(220 28% 97%);
+  }
+
+  .owner-dashboard #overview .text-slate-700,
+  .owner-dashboard #overview .text-slate-500 {
+    color: hsl(218 20% 75%);
+  }
+
+  .owner-dashboard #overview .bg-orange-50 {
+    border: 1px solid hsl(24 94% 56% / 0.2);
+    background: hsl(24 94% 56% / 0.1);
+    color: hsl(31 100% 82%);
+  }
+
+  .owner-dashboard #overview > div:last-child {
+    border-color: hsl(220 35% 86% / 0.1);
+    background: hsl(220 30% 96% / 0.055);
+    backdrop-filter: blur(12px);
+  }
+
+  .owner-dashboard #overview > div:last-child .text-slate-950 {
+    color: hsl(220 28% 97%);
   }
 }

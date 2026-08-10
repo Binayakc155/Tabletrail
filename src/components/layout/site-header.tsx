@@ -5,7 +5,6 @@ import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
 
-import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { getClerkUserRole, roleDashboardPath } from "@/lib/auth-roles";
@@ -19,15 +18,15 @@ export function SiteHeader() {
   const dashboardPath = roleDashboardPath(role);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border/50 bg-background/85 backdrop-blur-xl">
-      <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
-        <Link href="/" className="flex items-center gap-3">
-          <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-primary text-sm font-bold text-primary-foreground shadow-lg shadow-primary/20">
+    <header className="sticky top-0 z-40 border-b border-border/70 bg-background/90 shadow-[0_6px_24px_rgba(45,35,24,0.04)] backdrop-blur-xl">
+      <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
+        <Link href="/" className="flex items-center gap-2.5">
+          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-xs font-bold text-primary-foreground shadow-md shadow-primary/20">
             TT
           </span>
           <span className="flex flex-col leading-none">
             <span className="text-base font-semibold tracking-tight text-foreground">{siteConfig.name}</span>
-            <span className="text-xs text-muted-foreground">Restaurant listings platform</span>
+            <span className="mt-1 text-[10px] font-medium uppercase tracking-[0.16em] text-muted-foreground">Eat well, locally</span>
           </span>
         </Link>
 
@@ -36,7 +35,7 @@ export function SiteHeader() {
             <Link
               key={item.label}
               href={item.href}
-              className="rounded-full px-4 py-2 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+            className="rounded-full px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent/80 hover:text-foreground"
             >
               {item.label}
             </Link>
@@ -44,7 +43,6 @@ export function SiteHeader() {
         </nav>
 
         <div className="hidden items-center gap-3 lg:flex">
-          <ThemeToggle />
           {isSignedIn ? (
             <>
               <Badge variant="outline" className="capitalize">
@@ -58,17 +56,16 @@ export function SiteHeader() {
           ) : (
             <>
               <Button asChild variant="outline">
-                <Link href="/login">Owner / admin access</Link>
+                <Link href="/login">Sign in</Link>
               </Button>
             </>
           )}
-          <Button asChild>
-            <Link href="#pricing">List your restaurant</Link>
+          <Button asChild className="rounded-xl px-5 shadow-md shadow-primary/20">
+            <Link href="/register">List your restaurant</Link>
           </Button>
         </div>
 
         <div className="flex items-center gap-2 lg:hidden">
-          <ThemeToggle />
           <Button
             type="button"
             variant="outline"
@@ -124,7 +121,7 @@ export function SiteHeader() {
                 className="rounded-2xl px-4 py-3 text-sm font-medium text-foreground transition-colors hover:bg-accent"
                 onClick={() => setIsMenuOpen(false)}
               >
-                Owner / admin access
+                Sign in
               </Link>
             </>
           )}
@@ -137,11 +134,11 @@ export function SiteHeader() {
               </SignOutButton>
             ) : (
               <Button asChild variant="outline" className="flex-1">
-                <Link href="/login" onClick={() => setIsMenuOpen(false)}>Owner / admin</Link>
+                <Link href="/login" onClick={() => setIsMenuOpen(false)}>Sign in</Link>
               </Button>
             )}
             <Button asChild className="flex-1">
-              <Link href="#pricing">List your restaurant</Link>
+              <Link href="/register">List your restaurant</Link>
             </Button>
           </div>
         </div>

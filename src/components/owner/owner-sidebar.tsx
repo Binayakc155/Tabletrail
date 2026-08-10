@@ -37,15 +37,15 @@ export function OwnerSidebar() {
   const activeSection = useMemo(() => (pathname.startsWith("/owner") ? activeHash : "#overview"), [activeHash, pathname]);
 
   return (
-    <aside className="fixed inset-x-3 bottom-3 z-40 rounded-[18px] border border-slate-200 bg-white/92 p-3 text-slate-950 shadow-[0_10px_28px_-22px_rgba(15,23,42,0.28)] backdrop-blur lg:inset-y-4 lg:left-4 lg:right-auto lg:flex lg:w-[18rem] lg:flex-col lg:p-4">
+    <aside className="fixed inset-x-3 bottom-3 z-40 rounded-[18px] border border-white/10 bg-slate-950/80 p-3 text-slate-100 shadow-[0_20px_50px_-24px_rgba(2,6,23,0.8)] backdrop-blur-xl lg:inset-y-4 lg:left-4 lg:right-auto lg:flex lg:w-[18rem] lg:flex-col lg:p-4">
       <div className="hidden lg:block">
         <div className="flex items-center gap-3 rounded-[16px] px-2 py-2">
-          <div className="flex h-10 w-10 items-center justify-center rounded-[14px] bg-slate-950 text-white">
+          <div className="flex h-10 w-10 items-center justify-center rounded-[14px] bg-gradient-to-br from-orange-400 to-orange-600 text-white shadow-lg shadow-orange-500/20">
             <Store className="h-5 w-5" />
           </div>
           <div className="min-w-0">
-            <p className="truncate text-sm font-semibold text-slate-950">TableTrail Owner</p>
-            <p className="truncate text-xs text-slate-500">Restaurant management console</p>
+            <p className="truncate text-sm font-semibold text-white">TableTrail Owner</p>
+            <p className="truncate text-xs text-slate-400">Restaurant management console</p>
           </div>
         </div>
       </div>
@@ -60,8 +60,8 @@ export function OwnerSidebar() {
               key={item.label}
               href={item.href}
               className={cn(
-                "group relative flex min-h-12 items-center justify-center rounded-[14px] px-2 text-slate-500 transition duration-200 hover:bg-slate-100 hover:text-slate-950 lg:justify-start lg:gap-3 lg:px-3",
-                isActive && "bg-orange-50 text-slate-950 ring-1 ring-orange-200"
+                "group relative flex min-h-12 items-center justify-center rounded-[14px] px-2 text-slate-400 transition duration-200 hover:bg-white/[0.07] hover:text-white lg:justify-start lg:gap-3 lg:px-3",
+                isActive && "bg-gradient-to-r from-orange-500/20 to-orange-400/5 text-white ring-1 ring-orange-400/25"
               )}
               onClick={() => setActiveHash(item.href)}
               aria-current={isActive ? "page" : undefined}
@@ -69,7 +69,7 @@ export function OwnerSidebar() {
               <Icon className="h-5 w-5 shrink-0" />
               <span className="hidden min-w-0 truncate text-sm font-medium lg:block">{item.label}</span>
               {"meta" in item ? (
-                <Badge variant="outline" className="ml-auto hidden border-slate-200 bg-slate-50 px-2 py-0.5 text-[11px] text-slate-500 lg:inline-flex">
+                <Badge variant="outline" className="ml-auto hidden border-white/10 bg-white/[0.06] px-2 py-0.5 text-[11px] text-slate-400 lg:inline-flex">
                   {item.meta}
                 </Badge>
               ) : null}
@@ -82,7 +82,7 @@ export function OwnerSidebar() {
         <SignOutButton>
           <button
             type="button"
-            className="flex min-h-12 w-full items-center gap-3 rounded-[14px] border border-slate-200 px-3 text-sm font-medium text-slate-600 transition duration-200 hover:bg-rose-50 hover:text-rose-700"
+            className="flex min-h-12 w-full items-center gap-3 rounded-[14px] border border-white/10 px-3 text-sm font-medium text-slate-400 transition duration-200 hover:bg-rose-500/10 hover:text-rose-300"
           >
             <LogOut className="h-5 w-5" />
             Sign out
