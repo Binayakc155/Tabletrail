@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useTransition } from "react";
+import { useEffect, useMemo, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2, Store } from "lucide-react";
 
@@ -27,6 +27,12 @@ export function RestaurantList({ restaurants }: { restaurants: OwnerRestaurant[]
   const [menuRestaurant, setMenuRestaurant] = useState<OwnerRestaurant | null>(null);
   const [toast, setToast] = useState<{ type: "success" | "error"; message: string } | null>(null);
   const [isDeleting, startDeleteTransition] = useTransition();
+
+  useEffect(() => {
+    const updateQuery = (event: Event) => setQuery((event as CustomEvent<string>).detail ?? "");
+    window.addEventListener("owner-portfolio-search", updateQuery);
+    return () => window.removeEventListener("owner-portfolio-search", updateQuery);
+  }, []);
 
   const filteredRestaurants = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
@@ -72,10 +78,10 @@ export function RestaurantList({ restaurants }: { restaurants: OwnerRestaurant[]
 
   return (
     <section id="restaurants" className="space-y-5">
-      <div className="flex flex-col gap-4 rounded-[16px] border border-slate-200/80 bg-white/90 p-5 shadow-[0_16px_40px_-26px_rgba(15,23,42,0.28)] sm:flex-row sm:items-end sm:justify-between">
+      <div className="flex flex-col gap-4 rounded-xl border border-[#E5E7EB] bg-white p-6 sm:flex-row sm:items-end sm:justify-between">
         <div className="space-y-2">
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-orange-600">Restaurant management</p>
-          <h2 className="text-2xl font-semibold tracking-tight text-slate-950">Restaurant portfolio</h2>
+          <h2 className="text-xl font-semibold tracking-tight text-slate-950">My restaurants</h2>
           <p className="max-w-2xl text-sm leading-6 text-slate-500">Manage live listings, menu updates, cover images, and review performance from a single workspace.</p>
         </div>
         <AddRestaurantDialog open={addOpen} onOpenChange={setAddOpen} onSaved={(message) => showToast("success", message)} />
@@ -102,15 +108,11 @@ export function RestaurantList({ restaurants }: { restaurants: OwnerRestaurant[]
               onEdit={setEditingRestaurant}
               onDelete={setDeletingRestaurant}
               onMenu={setMenuRestaurant}
-              onAnalytics={(item) => {
-                showToast("success", `Analytics selected for ${item.name}.`);
-                document.getElementById("analytics")?.scrollIntoView({ behavior: "smooth" });
-              }}
             />
           ))}
         </div>
       ) : (
-        <div className="rounded-[16px] border border-dashed border-slate-300 bg-white/85 p-10 text-center shadow-[0_12px_32px_-24px_rgba(15,23,42,0.2)]">
+        <div className="rounded-xl border border-dashed border-slate-300 bg-white p-10 text-center">
           <div className="mx-auto mb-5 flex w-fit items-center justify-center rounded-[20px] border border-slate-200 bg-slate-50 p-4">
             <div className="relative h-16 w-24">
               <div className="absolute inset-x-0 bottom-0 h-10 rounded-[16px] border border-slate-200 bg-white shadow-sm" />

@@ -30,4 +30,5 @@ export type OwnerStats = {
   activeCustomers: number;
   monthlyRevenue: number;
   approvedRestaurants: number;
+  restaurantViews: number;
 };

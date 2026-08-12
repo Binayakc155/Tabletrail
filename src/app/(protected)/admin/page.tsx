@@ -20,10 +20,11 @@ export default async function AdminPage() {
     redirect("/customer/dashboard?error=forbidden");
   }
 
-  const [usersCount, restaurants] = await Promise.all([
-    prisma.user.count(),
-    prisma.restaurant.findMany({ orderBy: [{ status: "asc" }, { updatedAt: "desc" }], take: 20, include: { owner: { select: { email: true } } } }),
-  ]);
+  const restaurants = await prisma.restaurant.findMany({
+    orderBy: [{ status: "asc" }, { updatedAt: "desc" }],
+    take: 20,
+    include: { owner: { select: { email: true } } },
+  });
 
-  return <AdminConsole usersCount={usersCount} restaurants={restaurants} />;
+  return <AdminConsole restaurants={restaurants} />;
 }

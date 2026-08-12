@@ -9,7 +9,7 @@ import { SiteHeader } from "@/components/layout/site-header";
 export function SiteShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
 
-  if (pathname.startsWith("/owner")) {
+  if (pathname.startsWith("/owner") || pathname.startsWith("/admin")) {
     return <>{children}</>;
   }
 

@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { BarChart3, Eye, MapPin, MenuSquare, PencilLine, Star, Trash2 } from "lucide-react";
+import { Eye, MapPin, MenuSquare, PencilLine, Star, Trash2 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -22,14 +22,12 @@ export function RestaurantCard({
   onEdit,
   onDelete,
   onMenu,
-  onAnalytics,
 }: {
   restaurant: OwnerRestaurant;
   viewMode: "grid" | "list";
   onEdit: (restaurant: OwnerRestaurant) => void;
   onDelete: (restaurant: OwnerRestaurant) => void;
   onMenu: (restaurant: OwnerRestaurant) => void;
-  onAnalytics: (restaurant: OwnerRestaurant) => void;
 }) {
   const isOpen = restaurant.status === "approved";
 
@@ -107,10 +105,6 @@ export function RestaurantCard({
           <Button type="button" variant="outline" size="sm" className="rounded-[14px] border-slate-200 bg-white" onClick={() => onMenu(restaurant)}>
             <MenuSquare className="h-4 w-4" />
             Menu
-          </Button>
-          <Button type="button" variant="outline" size="sm" className="rounded-[14px] border-slate-200 bg-white" onClick={() => onAnalytics(restaurant)}>
-            <BarChart3 className="h-4 w-4" />
-            Analytics
           </Button>
           <Button type="button" variant="outline" size="sm" className="rounded-[14px] border-rose-200 text-rose-600 hover:bg-rose-50 hover:text-rose-700" onClick={() => onDelete(restaurant)}>
             <Trash2 className="h-4 w-4" />
