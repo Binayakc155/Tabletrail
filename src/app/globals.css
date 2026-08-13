@@ -79,3 +79,27 @@
     color: var(--color-text-primary);
   }
 }
+
+/* The admin restaurant-details dialog follows the shared warm application palette. */
+[role="dialog"].bg-\[\#101522\] {
+  background-color: var(--card) !important;
+  border-color: var(--border) !important;
+  color: var(--foreground) !important;
+}
+
+[role="dialog"].bg-\[\#101522\] .border-\[\#252C3D\] {
+  border-color: var(--border) !important;
+}
+
+[role="dialog"].bg-\[\#101522\] .text-\[\#F8FAFC\] {
+  color: var(--foreground) !important;
+}
+
+[role="dialog"].bg-\[\#101522\] .text-\[\#CBD5E1\],
+[role="dialog"].bg-\[\#101522\] .text-\[\#94A3B8\] {
+  color: var(--muted-foreground) !important;
+}
+
+[role="dialog"].bg-\[\#101522\] .bg-\[\#101522\] {
+  background-color: var(--card) !important;
+}

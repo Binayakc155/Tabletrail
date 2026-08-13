@@ -102,7 +102,7 @@ export function AdminConsole({ restaurants: initialRestaurants }: { restaurants:
             <span>TableTrail <span className="font-medium text-muted-foreground">Admin</span></span>
           </Link>
           <div className="flex items-center gap-4">
-            <span className="hidden items-center gap-2 text-sm text-muted-foreground sm:inline-flex"><ShieldCheck className="h-4 w-4" /> Admin workspace</span>
+          
             <SignOutButton>
               <button type="button" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">Sign out</button>
             </SignOutButton>
