@@ -94,17 +94,17 @@ export function AdminConsole({ restaurants: initialRestaurants }: { restaurants:
   const pendingCount = restaurants.filter((item) => item.status === "pending").length;
 
   return (
-    <div className="min-h-screen bg-[#080B16] text-[#F8FAFC]">
-      <header className="border-b border-[#252C3D] bg-[#080B16]">
+    <div className="min-h-screen bg-background text-foreground">
+      <header className="border-b border-border bg-surface">
         <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           <Link href="/admin" className="flex items-center gap-2.5 font-semibold tracking-tight">
-            <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#E8753F] text-xs font-bold text-white">TT</span>
-            <span>TableTrail <span className="font-medium text-[#94A3B8]">Admin</span></span>
+            <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-primary text-xs font-bold text-primary-foreground">TT</span>
+            <span>TableTrail <span className="font-medium text-muted-foreground">Admin</span></span>
           </Link>
           <div className="flex items-center gap-4">
-            <span className="hidden items-center gap-2 text-sm text-[#94A3B8] sm:inline-flex"><ShieldCheck className="h-4 w-4" /> Admin workspace</span>
+            <span className="hidden items-center gap-2 text-sm text-muted-foreground sm:inline-flex"><ShieldCheck className="h-4 w-4" /> Admin workspace</span>
             <SignOutButton>
-              <button type="button" className="text-sm font-medium text-[#94A3B8] transition-colors hover:text-[#F8FAFC]">Sign out</button>
+              <button type="button" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">Sign out</button>
             </SignOutButton>
           </div>
         </div>
@@ -113,7 +113,7 @@ export function AdminConsole({ restaurants: initialRestaurants }: { restaurants:
       <main className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
         <div className="mb-8 flex flex-col gap-2">
           <h1 className="text-3xl font-semibold tracking-tight sm:text-[32px]">Restaurants</h1>
-          <p className="text-sm leading-6 text-[#94A3B8]">Review restaurant listings and manage their publication status.</p>
+          <p className="text-sm leading-6 text-muted-foreground">Review restaurant listings and manage their publication status.</p>
         </div>
 
         {error ? <p role="alert" className="mb-6 rounded-xl border border-red-400/30 bg-red-400/10 px-4 py-3 text-sm text-red-200">{error}</p> : null}
@@ -124,30 +124,30 @@ export function AdminConsole({ restaurants: initialRestaurants }: { restaurants:
           <Stat label="Pending approval" value={pendingCount} />
         </section>
 
-        <section className="mt-6 overflow-hidden rounded-[14px] border border-[#252C3D] bg-[#101522] shadow-[0_8px_24px_rgba(0,0,0,0.14)]">
-          <div className="flex items-center justify-between border-b border-[#252C3D] px-6 py-5">
+        <section className="mt-6 overflow-hidden rounded-xl border border-border bg-card shadow-[0_1px_2px_rgba(42,33,28,0.04),0_4px_12px_rgba(42,33,28,0.06)]">
+          <div className="flex items-center justify-between border-b border-border px-6 py-5">
             <div>
               <h2 className="text-base font-semibold">All restaurants</h2>
-              <p className="mt-1 text-sm text-[#94A3B8]">Approve new listings or manage an existing restaurant.</p>
+              <p className="mt-1 text-sm text-muted-foreground">Approve new listings or manage an existing restaurant.</p>
             </div>
-            <span className="text-sm text-[#94A3B8]">{restaurants.length} total</span>
+            <span className="text-sm text-muted-foreground">{restaurants.length} total</span>
           </div>
 
           <div className="overflow-x-auto">
             <table className="w-full min-w-[680px] text-left">
-              <thead className="bg-[#080B16]/40 text-xs font-medium uppercase tracking-[0.08em] text-[#94A3B8]">
+              <thead className="bg-surface-alt text-xs font-medium uppercase tracking-[0.08em] text-muted-foreground">
                 <tr><th className="px-6 py-3">Restaurant</th><th className="px-6 py-3">Owner/email</th><th className="px-6 py-3">Status</th><th className="px-6 py-3 text-right">Actions</th></tr>
               </thead>
-              <tbody className="divide-y divide-[#252C3D]">
+              <tbody className="divide-y divide-border">
                 {restaurants.map((restaurant) => (
-                  <tr key={restaurant.id} className="transition-colors hover:bg-white/[0.02]">
-                    <td className="px-6 py-4"><p className="font-medium text-[#F8FAFC]">{restaurant.name}</p><p className="mt-1 text-sm text-[#94A3B8]">{restaurant.cuisine}</p></td>
-                    <td className="px-6 py-4 text-sm text-[#94A3B8]">{restaurant.owner?.email ?? "No owner assigned"}</td>
+                  <tr key={restaurant.id} className="transition-colors hover:bg-accent/50">
+                    <td className="px-6 py-4"><p className="font-medium text-foreground">{restaurant.name}</p><p className="mt-1 text-sm text-muted-foreground">{restaurant.cuisine}</p></td>
+                    <td className="px-6 py-4 text-sm text-muted-foreground">{restaurant.owner?.email ?? "No owner assigned"}</td>
                     <td className="px-6 py-4"><StatusBadge status={restaurant.status} /></td>
                     <td className="px-6 py-4"><div className="flex justify-end gap-2"><RestaurantActions restaurant={restaurant} disabled={pending} onView={viewRestaurant} onUpdate={updateRestaurant} onDelete={deleteRestaurant} /></div></td>
                   </tr>
                 ))}
-                {restaurants.length === 0 ? <tr><td colSpan={4} className="px-6 py-12 text-center text-sm text-[#94A3B8]">No restaurant listings found.</td></tr> : null}
+                {restaurants.length === 0 ? <tr><td colSpan={4} className="px-6 py-12 text-center text-sm text-muted-foreground">No restaurant listings found.</td></tr> : null}
               </tbody>
             </table>
           </div>

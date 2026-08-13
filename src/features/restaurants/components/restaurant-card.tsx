@@ -13,7 +13,7 @@ function formatPriceLevel(priceLevel: RestaurantSummary["priceLevel"]) {
 
 export function RestaurantCard({ restaurant }: { restaurant: RestaurantSummary }) {
   return (
-    <Card className="group overflow-hidden border-border/80 bg-card shadow-[0_8px_24px_rgba(57,39,20,0.06)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_18px_38px_rgba(57,39,20,0.13)]">
+    <Card className="group overflow-hidden transition duration-300 hover:-translate-y-1">
       <div className="relative h-60 overflow-hidden">
         <Image
           src={restaurant.imageUrl}
@@ -24,7 +24,7 @@ export function RestaurantCard({ restaurant }: { restaurant: RestaurantSummary }
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent" />
         <div className="absolute left-4 top-4 flex items-center gap-2">
-          <Badge variant="secondary" className="bg-white/95 text-slate-900 shadow-sm backdrop-blur dark:bg-slate-950/80 dark:text-white">
+          <Badge variant="secondary" className="bg-surface text-foreground shadow-sm backdrop-blur">
             {restaurant.cuisine}
           </Badge>
           <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500 px-2.5 py-1 text-[11px] font-semibold text-white shadow-sm"><span className="h-1.5 w-1.5 rounded-full bg-white" /> Open today</span>
@@ -43,7 +43,7 @@ export function RestaurantCard({ restaurant }: { restaurant: RestaurantSummary }
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <CardTitle className="flex items-center gap-1.5 text-xl"><span>{restaurant.name}</span><BadgeCheck className="h-4 w-4 shrink-0 text-primary" aria-label="Verified restaurant" /></CardTitle>
+            <CardTitle className="flex items-center gap-1.5 text-lg"><span>{restaurant.name}</span><BadgeCheck className="h-4 w-4 shrink-0 text-primary" aria-label="Verified restaurant" /></CardTitle>
             <CardDescription className="mt-1">{restaurant.address ?? restaurant.neighborhood ?? restaurant.city}</CardDescription>
           </div>
           <span className="rounded-full bg-accent px-3 py-1 text-xs font-semibold text-foreground">{formatPriceLevel(restaurant.priceLevel)}</span>
@@ -57,7 +57,7 @@ export function RestaurantCard({ restaurant }: { restaurant: RestaurantSummary }
         <p className="text-sm text-muted-foreground">
           {restaurant.reviewCount} reviews{restaurant.distanceMiles ? ` · ${restaurant.distanceMiles.toFixed(1)} mi` : ""}
         </p>
-        <Button asChild size="sm" variant="outline" className="rounded-xl">
+        <Button asChild size="sm" variant="outline">
           <Link href={`/restaurants/${restaurant.slug}`}>
             View restaurant
             <ChevronRight className="h-4 w-4" />

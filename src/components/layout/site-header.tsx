@@ -18,7 +18,7 @@ export function SiteHeader() {
   const dashboardPath = roleDashboardPath(role);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border/70 bg-background/90 shadow-[0_6px_24px_rgba(45,35,24,0.04)] backdrop-blur-xl">
+    <header className="sticky top-0 z-40 border-b border-border bg-surface/90 shadow-[0_1px_2px_rgba(42,33,28,0.04),0_4px_12px_rgba(42,33,28,0.06)] backdrop-blur-xl">
       <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
         <Link href="/" className="flex items-center gap-2.5">
           <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-xs font-bold text-primary-foreground shadow-md shadow-primary/20">
@@ -60,7 +60,7 @@ export function SiteHeader() {
               </Button>
             </>
           )}
-          <Button asChild className="rounded-xl px-5 shadow-md shadow-primary/20">
+          <Button asChild className="px-5">
             <Link href="/register">List your restaurant</Link>
           </Button>
         </div>
@@ -89,7 +89,7 @@ export function SiteHeader() {
             <Link
               key={item.label}
               href={item.href}
-              className="rounded-2xl px-4 py-3 text-sm font-medium text-foreground transition-colors hover:bg-accent"
+              className="rounded-lg px-4 py-3 text-sm font-medium text-foreground transition-colors hover:bg-accent"
               onClick={() => setIsMenuOpen(false)}
             >
               {item.label}
@@ -99,7 +99,7 @@ export function SiteHeader() {
             <>
               <Link
                 href={dashboardPath}
-                className="rounded-2xl px-4 py-3 text-sm font-medium text-foreground transition-colors hover:bg-accent"
+                className="rounded-lg px-4 py-3 text-sm font-medium text-foreground transition-colors hover:bg-accent"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Dashboard
@@ -107,7 +107,7 @@ export function SiteHeader() {
               <SignOutButton>
                 <button
                   type="button"
-                  className="rounded-2xl px-4 py-3 text-left text-sm font-medium text-foreground transition-colors hover:bg-accent"
+                  className="rounded-lg px-4 py-3 text-left text-sm font-medium text-foreground transition-colors hover:bg-accent"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Logout
@@ -118,7 +118,7 @@ export function SiteHeader() {
             <>
               <Link
                 href="/login"
-                className="rounded-2xl px-4 py-3 text-sm font-medium text-foreground transition-colors hover:bg-accent"
+                className="rounded-lg px-4 py-3 text-sm font-medium text-foreground transition-colors hover:bg-accent"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Sign in
