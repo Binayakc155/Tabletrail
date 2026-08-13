@@ -48,7 +48,7 @@ export default async function Home() {
     reviewCount: restaurant.reviewCount,
     priceLevel: restaurant.priceLevel,
     description: restaurant.description,
-    imageUrl: restaurant.images[0]?.url ?? restaurant.imageUrl,
+    imageUrl: restaurant.imageUrl,
     address: restaurant.address,
     openingHours: restaurant.openingHours,
   }));

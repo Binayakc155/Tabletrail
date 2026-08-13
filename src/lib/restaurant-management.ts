@@ -156,6 +156,17 @@ export async function updateOwnerRestaurant(restaurant: Restaurant, values: Rest
       latitude: values.latitude,
       longitude: values.longitude,
       imageUrl: imageUrl ?? restaurant.imageUrl,
+      // Keep the public cover-image record in sync with the dashboard image.
+      ...(imageUrl
+        ? {
+            images: {
+              updateMany: {
+                where: { OR: [{ isCover: true }, { url: restaurant.imageUrl }] },
+                data: { url: imageUrl, alt: values.name },
+              },
+            },
+          }
+        : {}),
     },
   });
 }

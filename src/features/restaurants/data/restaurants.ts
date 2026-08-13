@@ -203,7 +203,7 @@ export async function listRestaurants(params: RestaurantSearchParams = {}) {
 
     const withDistance = rawRestaurants.map((restaurant) => ({
       ...restaurant,
-      imageUrl: restaurant.images[0]?.url ?? restaurant.imageUrl,
+      imageUrl: restaurant.imageUrl,
       distanceMiles:
         userLat !== undefined && userLng !== undefined && restaurant.latitude !== null && restaurant.longitude !== null
           ? distanceInMiles(userLat, userLng, restaurant.latitude, restaurant.longitude)
