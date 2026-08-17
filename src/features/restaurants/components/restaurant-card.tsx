@@ -7,10 +7,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import type { RestaurantSummary } from "@/features/restaurants/types";
 
-function formatPriceLevel(priceLevel: RestaurantSummary["priceLevel"]) {
-  return "$".repeat(Math.max(1, Math.min(priceLevel, 4)));
-}
-
 export function RestaurantCard({ restaurant }: { restaurant: RestaurantSummary }) {
   return (
     <Card className="group overflow-hidden transition duration-300 hover:-translate-y-1">
@@ -46,7 +42,6 @@ export function RestaurantCard({ restaurant }: { restaurant: RestaurantSummary }
             <CardTitle className="flex items-center gap-1.5 text-lg"><span>{restaurant.name}</span><BadgeCheck className="h-4 w-4 shrink-0 text-primary" aria-label="Verified restaurant" /></CardTitle>
             <CardDescription className="mt-1">{restaurant.address ?? restaurant.neighborhood ?? restaurant.city}</CardDescription>
           </div>
-          <span className="rounded-full bg-accent px-3 py-1 text-xs font-semibold text-foreground">{formatPriceLevel(restaurant.priceLevel)}</span>
         </div>
       </CardHeader>
       <CardContent className="space-y-3">

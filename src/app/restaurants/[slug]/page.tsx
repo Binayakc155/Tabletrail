@@ -149,5 +149,5 @@ function GalleryImage({ image, restaurantName, className, sizes }: { image: { ur
 }
 
 function MenuItem({ name, description, price }: { name: string; description: string | null; price: number }) {
-  return <div className="flex justify-between gap-4 border-b border-border pb-3"><div><p className="font-medium text-foreground">{displayText(name, "Menu item")}</p>{displayOptionalText(description) ? <p className="mt-1 text-sm text-muted-foreground">{displayOptionalText(description)}</p> : null}</div><p className="shrink-0 font-semibold text-primary">${price.toFixed(2)}</p></div>;
+  return <div className="flex justify-between gap-4 border-b border-border pb-3"><div><p className="font-medium text-foreground">{displayText(name, "Menu item")}</p>{displayOptionalText(description) ? <p className="mt-1 text-sm text-muted-foreground">{displayOptionalText(description)}</p> : null}</div><p className="shrink-0 font-semibold text-primary">{price.toFixed(2)}</p></div>;
 }

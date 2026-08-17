@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { RestaurantForm } from "@/components/restaurants/restaurant-form";
 
-export function RestaurantManager({ restaurants }: { restaurants: Array<{ id: string; name: string; description: string; address: string; city: string; contactEmail: string | null; phoneNumber: string; openingHours: string; cuisine: string; priceLevel: number; latitude: number | null; longitude: number | null; imageUrl: string; slug: string; status: string; }> }) {
+export function RestaurantManager({ restaurants }: { restaurants: Array<{ id: string; name: string; description: string; address: string; city: string; contactEmail: string | null; phoneNumber: string; openingHours: string; cuisine: string; latitude: number | null; longitude: number | null; imageUrl: string; slug: string; status: string; }> }) {
   const [editingRestaurant, setEditingRestaurant] = useState<string | null>(null);
   const activeRestaurant = restaurants.find((restaurant) => restaurant.id === editingRestaurant) ?? null;
 
@@ -49,7 +49,6 @@ export function RestaurantManager({ restaurants }: { restaurants: Array<{ id: st
                 phoneNumber: activeRestaurant.phoneNumber,
                 openingHours: activeRestaurant.openingHours,
                 cuisine: activeRestaurant.cuisine,
-                priceLevel: activeRestaurant.priceLevel,
                 latitude: activeRestaurant.latitude ?? 0,
                 longitude: activeRestaurant.longitude ?? 0,
                 imageUrl: activeRestaurant.imageUrl,

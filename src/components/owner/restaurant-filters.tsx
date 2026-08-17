@@ -32,7 +32,7 @@ export function RestaurantFilters({
     <div className="grid gap-3 rounded-xl border border-[#E5E7EB] bg-white p-3 shadow-none xl:grid-cols-[1fr_auto_auto_auto]">
       <div className="relative">
         <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-        <Input value={query} onChange={(event) => onQueryChange(event.target.value)} placeholder="Search by name, cuisine, address..." className="h-10 rounded-lg border-slate-200 bg-[#F9FAFB] pl-11 shadow-none focus-visible:ring-[#E87532]" />
+        <Input value={query} onChange={(event) => onQueryChange(event.target.value)} placeholder="Search by name, food, address..." className="h-10 rounded-lg border-slate-200 bg-[#F9FAFB] pl-11 shadow-none focus-visible:ring-[#E87532]" />
       </div>
       <select value={status} onChange={(event) => onStatusChange(event.target.value)} className="h-10 rounded-lg border border-slate-200 bg-white px-3 text-sm font-medium text-slate-700 outline-none transition focus:border-[#E87532] focus:ring-2 focus:ring-orange-100">
         <option value="all">All statuses</option>

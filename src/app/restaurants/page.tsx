@@ -30,14 +30,14 @@ export default async function RestaurantsPage({
           Curated restaurants, sorted by quality and neighborhood fit.
         </h1>
         <p className="text-lg leading-8 text-muted-foreground">
-          Explore featured venues with verified ratings, price levels, and concise editorial summaries.
+          Explore featured venues with verified ratings and concise editorial summaries.
         </p>
       </div>
 
-      <form className="mb-8 grid gap-3 rounded-lg border border-border bg-card p-4 md:grid-cols-[1.4fr_repeat(5,minmax(0,1fr))]">
-        <Input name="q" placeholder="Search by name, cuisine, or address" defaultValue={params.q ?? ""} />
+      <form className="mb-8 grid gap-3 rounded-lg border border-border bg-card p-4 md:grid-cols-[1.4fr_repeat(4,minmax(0,1fr))]">
+        <Input name="q" placeholder="Search by name, food, or address" defaultValue={params.q ?? ""} />
         <select name="cuisine" defaultValue={params.cuisine ?? ""} className="rounded-md border border-input bg-background px-3 py-2 text-sm">
-          <option value="">All cuisines</option>
+          <option value="">All food</option>
           {cuisines.map((cuisine) => (
             <option key={cuisine} value={cuisine}>{cuisine}</option>
           ))}
@@ -47,18 +47,10 @@ export default async function RestaurantsPage({
           <option value="4">4+ stars</option>
           <option value="3">3+ stars</option>
         </select>
-        <select name="price" defaultValue={params.price ?? ""} className="rounded-md border border-input bg-background px-3 py-2 text-sm">
-          <option value="">Any price</option>
-          {[1, 2, 3, 4].map((price) => (
-            <option key={price} value={price}>{"$".repeat(price)}</option>
-          ))}
-        </select>
         <select name="sort" defaultValue={params.sort ?? "latest"} className="rounded-md border border-input bg-background px-3 py-2 text-sm">
           <option value="latest">Newest</option>
           <option value="rating">Top rated</option>
           <option value="reviews">Most reviewed</option>
-          <option value="price_asc">Price low</option>
-          <option value="price_desc">Price high</option>
           <option value="distance">Nearest</option>
           <option value="name">Name</option>
         </select>

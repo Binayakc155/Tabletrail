@@ -44,7 +44,6 @@ export function RestaurantForm({
       phoneNumber: defaultValues?.phoneNumber ?? "",
       openingHours: defaultValues?.openingHours ?? "",
       cuisine: defaultValues?.cuisine ?? "",
-      priceLevel: defaultValues?.priceLevel ?? 2,
       latitude: defaultValues?.latitude ?? 0,
       longitude: defaultValues?.longitude ?? 0,
     },
@@ -119,7 +118,7 @@ export function RestaurantForm({
           {form.formState.errors.phoneNumber ? <p className="text-sm text-destructive">{form.formState.errors.phoneNumber.message}</p> : null}
         </div>
         <div className="grid gap-2">
-          <Label htmlFor="cuisine">Cuisine</Label>
+          <Label htmlFor="cuisine">Food</Label>
           <Input id="cuisine" placeholder="Japanese Fusion" {...form.register("cuisine")} />
           {form.formState.errors.cuisine ? <p className="text-sm text-destructive">{form.formState.errors.cuisine.message}</p> : null}
         </div>
@@ -131,12 +130,7 @@ export function RestaurantForm({
         {form.formState.errors.openingHours ? <p className="text-sm text-destructive">{form.formState.errors.openingHours.message}</p> : null}
       </div>
 
-      <div className="grid gap-2 sm:grid-cols-3">
-        <div className="grid gap-2">
-          <Label htmlFor="priceLevel">Price range</Label>
-          <Input id="priceLevel" type="number" min={1} max={4} {...form.register("priceLevel", { valueAsNumber: true })} />
-          {form.formState.errors.priceLevel ? <p className="text-sm text-destructive">{form.formState.errors.priceLevel.message}</p> : null}
-        </div>
+      <div className="grid gap-2 sm:grid-cols-2">
         <div className="grid gap-2">
           <Label htmlFor="latitude">Latitude</Label>
           <Input id="latitude" type="number" step="any" placeholder="37.7749" {...form.register("latitude", { valueAsNumber: true })} />

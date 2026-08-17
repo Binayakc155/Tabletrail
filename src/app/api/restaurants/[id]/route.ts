@@ -56,7 +56,6 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
       phoneNumber: parsed.data.phoneNumber,
       openingHours: parsed.data.openingHours,
       cuisine: parsed.data.cuisine,
-      priceLevel: parsed.data.priceLevel,
       latitude: parsed.data.latitude,
       longitude: parsed.data.longitude,
       slug: restaurant.slug,

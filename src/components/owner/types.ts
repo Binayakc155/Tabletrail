@@ -8,7 +8,6 @@ export type OwnerRestaurant = {
   phoneNumber: string;
   openingHours: string;
   cuisine: string;
-  priceLevel: number;
   latitude: number | null;
   longitude: number | null;
   imageUrl: string;

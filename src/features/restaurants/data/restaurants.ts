@@ -7,7 +7,6 @@ export type RestaurantSearchParams = {
   q?: string;
   cuisine?: string;
   rating?: string;
-  price?: string;
   openNow?: string;
   sort?: string;
   page?: string;
@@ -40,8 +39,6 @@ function distanceInMiles(lat1: number, lng1: number, lat2: number, lng2: number)
 function getOrderBy(sort?: string): Prisma.RestaurantOrderByWithRelationInput {
   if (sort === "rating") return { rating: "desc" };
   if (sort === "reviews") return { reviewCount: "desc" };
-  if (sort === "price_asc") return { priceLevel: "asc" };
-  if (sort === "price_desc") return { priceLevel: "desc" };
   if (sort === "name") return { name: "asc" };
   return { updatedAt: "desc" };
 }
@@ -50,7 +47,6 @@ function matchesMockRestaurant(restaurant: (typeof featuredRestaurants)[number],
   const query = params.q?.trim().toLowerCase();
   const cuisine = params.cuisine?.trim().toLowerCase();
   const minRating = toNumber(params.rating);
-  const priceLevel = toNumber(params.price);
 
   if (query) {
     const haystack = [restaurant.name, restaurant.cuisine, restaurant.city, restaurant.address, restaurant.neighborhood, restaurant.description]
@@ -63,7 +59,6 @@ function matchesMockRestaurant(restaurant: (typeof featuredRestaurants)[number],
 
   if (cuisine && restaurant.cuisine.toLowerCase() !== cuisine) return false;
   if (minRating !== undefined && restaurant.rating < minRating) return false;
-  if (priceLevel !== undefined && restaurant.priceLevel !== priceLevel) return false;
   if (params.openNow === "true" && restaurant.openingHours?.toLowerCase().includes("closed")) return false;
 
   return true;
@@ -74,8 +69,6 @@ function sortMockRestaurants(restaurants: typeof featuredRestaurants, sort?: str
 
   if (sort === "rating") return sorted.sort((a, b) => b.rating - a.rating);
   if (sort === "reviews") return sorted.sort((a, b) => b.reviewCount - a.reviewCount);
-  if (sort === "price_asc") return sorted.sort((a, b) => a.priceLevel - b.priceLevel);
-  if (sort === "price_desc") return sorted.sort((a, b) => b.priceLevel - a.priceLevel);
   if (sort === "name") return sorted.sort((a, b) => a.name.localeCompare(b.name));
 
   return sorted;
@@ -117,7 +110,6 @@ function buildMockRestaurantDetails(slug: string) {
     phoneNumber: "(555) 000-0000",
     openingHours: restaurant.openingHours ?? "Open daily",
     cuisine: restaurant.cuisine,
-    priceLevel: restaurant.priceLevel,
     rating: restaurant.rating,
     reviewCount: restaurant.reviewCount,
     imageUrl: restaurant.imageUrl,
@@ -160,7 +152,6 @@ export async function listRestaurants(params: RestaurantSearchParams = {}) {
 
   const page = Math.max(toNumber(params.page) ?? 1, 1);
   const minRating = toNumber(params.rating);
-  const priceLevel = toNumber(params.price);
   const userLat = toNumber(params.lat);
   const userLng = toNumber(params.lng);
   const maxDistance = toNumber(params.distance);
@@ -179,7 +170,6 @@ export async function listRestaurants(params: RestaurantSearchParams = {}) {
       : {}),
     ...(params.cuisine ? { cuisine: { equals: params.cuisine, mode: "insensitive" } } : {}),
     ...(minRating ? { rating: { gte: minRating } } : {}),
-    ...(priceLevel ? { priceLevel } : {}),
     ...(params.openNow === "true" ? { NOT: { openingHours: { contains: "closed", mode: "insensitive" } } } : {}),
   };
 

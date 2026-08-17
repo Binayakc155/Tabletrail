@@ -18,19 +18,19 @@ export function OwnerHeader() {
   }
 
   return (
-    <header className="sticky top-0 z-30 border-b border-slate-200 bg-white px-4 py-3 sm:px-6 lg:px-8">
+    <header className="sticky top-0 z-30 border-b border-slate-200/80 bg-white/95 px-4 py-3 backdrop-blur sm:px-6 lg:px-8">
       <div className="flex items-center gap-3">
         <div className="hidden min-w-0 flex-1 lg:block"><p className="text-sm font-semibold text-slate-900">Owner dashboard</p><p className="mt-0.5 text-xs text-slate-500">Manage your restaurant portfolio</p></div>
         <form className="relative min-w-0 flex-1 md:max-w-sm" onSubmit={searchPortfolio}>
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-          <Input name="q" className="h-10 border-slate-200 bg-[#F6F7F9] pl-9 text-sm shadow-none placeholder:text-slate-400 focus-visible:ring-[#E87532]" placeholder="Search restaurants" />
+          <Input name="q" className="h-12 rounded-xl border-slate-200 bg-[#F8FAFC] pl-10 text-sm shadow-none placeholder:text-slate-400 transition focus-visible:border-orange-300 focus-visible:ring-[#F97316]/20" placeholder="Search restaurants" />
         </form>
         <div className="flex shrink-0 items-center gap-2">
           <AddRestaurantDialog open={addRestaurantOpen} onOpenChange={setAddRestaurantOpen} onSaved={() => undefined} />
           <UserButton
             appearance={{
               elements: {
-                userButtonAvatarBox: "h-10 w-10 rounded-xl border border-slate-200 shadow-none",
+                userButtonAvatarBox: "h-10 w-10 rounded-xl border border-slate-200 shadow-sm",
                 userButtonPopoverCard: "rounded-xl border border-slate-200 shadow-lg",
               },
             }}

@@ -7,7 +7,6 @@ export type RestaurantSummary = {
   neighborhood?: string;
   rating: number;
   reviewCount: number;
-  priceLevel: number;
   description: string;
   imageUrl: string;
   address?: string;

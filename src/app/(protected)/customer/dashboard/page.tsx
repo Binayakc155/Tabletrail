@@ -41,7 +41,7 @@ export default async function CustomerDashboardPage() {
         <Card>
           <CardHeader>
             <CardTitle>Explore restaurants</CardTitle>
-            <CardDescription>Browse restaurants by cuisine, location, rating, and price.</CardDescription>
+            <CardDescription>Browse restaurants by food, location, and rating.</CardDescription>
           </CardHeader>
           <CardContent>
             <Button asChild>

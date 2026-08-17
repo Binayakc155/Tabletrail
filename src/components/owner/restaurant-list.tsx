@@ -151,7 +151,6 @@ export function RestaurantList({ restaurants }: { restaurants: OwnerRestaurant[]
                 phoneNumber: editingRestaurant.phoneNumber,
                 openingHours: editingRestaurant.openingHours,
                 cuisine: editingRestaurant.cuisine,
-                priceLevel: editingRestaurant.priceLevel,
                 latitude: editingRestaurant.latitude ?? 0,
                 longitude: editingRestaurant.longitude ?? 0,
                 imageUrl: editingRestaurant.imageUrl,

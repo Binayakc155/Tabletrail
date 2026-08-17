@@ -52,7 +52,6 @@ model Restaurant {
   phoneNumber  String
   openingHours String
   cuisine      String
-  priceLevel   Int              @default(2)
   rating       Float            @default(0)
   reviewCount  Int              @default(0)
   imageUrl     String

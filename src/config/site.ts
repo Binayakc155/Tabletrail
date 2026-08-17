@@ -4,14 +4,14 @@ export const siteConfig = {
   url: process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000",
   navigation: [
     { label: "Explore", href: "#explore" },
-    { label: "Cuisines", href: "#cuisines" },
+    { label: "Food", href: "#cuisines" },
     { label: "Locations", href: "#locations" },
     { label: "Reviews", href: "#reviews" },
     { label: "About", href: "#about" },
   ],
   footerLinks: [
     { label: "Restaurants", href: "#explore" },
-    { label: "Explore cuisines", href: "#cuisines" },
+    { label: "Explore food", href: "#cuisines" },
     { label: "Sign in", href: "/login" },
     { label: "Register a restaurant", href: "/register" },
   ],

@@ -31,10 +31,10 @@ export function OwnerSidebar() {
   const activeSection = useMemo(() => (pathname.startsWith("/owner") ? activeHash : "#overview"), [activeHash, pathname]);
 
   return (
-    <aside className="fixed inset-x-3 bottom-3 z-40 rounded-2xl border border-slate-200 bg-white p-2 shadow-sm lg:inset-y-0 lg:left-0 lg:right-auto lg:flex lg:w-[15.5rem] lg:flex-col lg:rounded-none lg:border-y-0 lg:border-l-0 lg:p-4">
+    <aside className="fixed inset-x-3 bottom-3 z-40 rounded-2xl border border-slate-200 bg-white p-2 shadow-[0_8px_24px_rgba(15,23,42,0.06)] lg:inset-y-0 lg:left-0 lg:right-auto lg:flex lg:w-[15.5rem] lg:flex-col lg:rounded-none lg:border-y-0 lg:border-l-0 lg:border-r lg:p-4 lg:shadow-none">
       <div className="hidden lg:block">
         <div className="flex items-center gap-3 border-b border-slate-100 px-2 pb-5 pt-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#E87532] text-white">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#F97316] text-white shadow-sm shadow-orange-200">
             <Store className="h-5 w-5" />
           </div>
           <div className="min-w-0">
@@ -54,8 +54,8 @@ export function OwnerSidebar() {
               key={item.label}
               href={item.href}
               className={cn(
-                "group relative flex min-h-10 items-center justify-center rounded-lg px-2 text-slate-500 transition hover:bg-slate-50 hover:text-slate-900 lg:justify-start lg:gap-3 lg:px-3",
-                isActive && "bg-orange-50 text-[#C85E20]"
+                "group relative flex min-h-11 items-center justify-center rounded-xl px-2 text-slate-500 transition-all duration-200 hover:bg-slate-50 hover:text-slate-900 lg:justify-start lg:gap-3 lg:px-3",
+                isActive && "bg-[#FFF7ED] text-[#F97316]"
               )}
               onClick={() => setActiveHash(item.href)}
               aria-current={isActive ? "page" : undefined}
@@ -71,7 +71,7 @@ export function OwnerSidebar() {
         <SignOutButton>
           <button
             type="button"
-            className="flex min-h-10 w-full items-center gap-3 rounded-lg px-3 text-sm font-medium text-slate-500 transition hover:bg-rose-50 hover:text-rose-700"
+            className="flex min-h-11 w-full items-center gap-3 rounded-xl px-3 text-sm font-medium text-slate-500 transition-all duration-200 hover:bg-rose-50 hover:text-rose-700"
           >
             <LogOut className="h-5 w-5" />
             Sign out

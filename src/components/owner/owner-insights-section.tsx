@@ -36,8 +36,6 @@ function buildAreaPath(values: number[]) {
 
 function formatCompactCurrency(value: number) {
   return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
     notation: value >= 10000 ? "compact" : "standard",
     maximumFractionDigits: 0,
   }).format(value);

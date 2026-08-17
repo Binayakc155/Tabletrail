@@ -42,7 +42,6 @@ export async function createRestaurantAction(formData: FormData) {
     phoneNumber: formData.get("phoneNumber"),
     openingHours: formData.get("openingHours"),
     cuisine: formData.get("cuisine"),
-    priceLevel: formData.get("priceLevel"),
     latitude: formData.get("latitude"),
     longitude: formData.get("longitude"),
   });
@@ -85,7 +84,6 @@ export async function updateRestaurantAction(formData: FormData) {
     phoneNumber: formData.get("phoneNumber"),
     openingHours: formData.get("openingHours"),
     cuisine: formData.get("cuisine"),
-    priceLevel: formData.get("priceLevel"),
     latitude: formData.get("latitude"),
     longitude: formData.get("longitude"),
   });

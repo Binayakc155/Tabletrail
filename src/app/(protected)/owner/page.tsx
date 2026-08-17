@@ -75,7 +75,6 @@ export default async function OwnerPage() {
     phoneNumber: restaurant.phoneNumber,
     openingHours: restaurant.openingHours,
     cuisine: restaurant.cuisine,
-    priceLevel: restaurant.priceLevel,
     latitude: restaurant.latitude,
     longitude: restaurant.longitude,
     imageUrl: restaurant.imageUrl,
@@ -101,27 +100,27 @@ export default async function OwnerPage() {
   };
 
   return (
-    <section className="space-y-6 pb-8 lg:pb-0">
-      <section id="overview" className="grid gap-5 rounded-xl border border-[#E5E7EB] bg-white p-6 lg:grid-cols-[1fr_auto] lg:items-center">
-        <div className="space-y-4">
+    <section className="space-y-5 pb-8 lg:pb-0">
+      <section id="overview" className="grid gap-5 rounded-[20px] border border-[#E2E8F0] bg-white p-5 shadow-[0_4px_20px_rgba(15,23,42,0.04)] sm:p-6 lg:grid-cols-[1fr_auto] lg:items-center">
+        <div className="space-y-3">
           <Badge variant="secondary" className="w-fit rounded-[999px] bg-orange-50 px-3 py-1 text-orange-700">
             Restaurant owner dashboard
           </Badge>
-          <div className="space-y-3">
-            <h1 className="text-3xl font-semibold tracking-tight text-slate-950 sm:text-5xl">Welcome back, {user.name ?? "Owner"} 👋</h1>
-            <p className="max-w-3xl text-base leading-7 text-slate-500">
+          <div className="space-y-2">
+            <h1 className="text-2xl font-medium tracking-tight text-[#0F172A] sm:text-4xl">Welcome  {user.name ?? "Owner"} </h1>
+            <p className="max-w-3xl text-sm leading-6 text-[#64748B] sm:text-base">
               Here&apos;s a quick overview of your restaurant portfolio and customer activity.
             </p>
           </div>
         </div>
-        <div className="grid gap-3 rounded-lg border border-slate-200 bg-[#F9FAFB] p-4 sm:grid-cols-2">
+        <div className="grid gap-4 rounded-2xl border border-slate-200 bg-[#F8FAFC] p-4 sm:grid-cols-2">
           <div>
             <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-500">Today</p>
-            <p className="mt-1 text-base font-semibold text-slate-950">{new Intl.DateTimeFormat("en-US", { weekday: "long", month: "long", day: "numeric" }).format(now)}</p>
+            <p className="mt-1 text-sm font-semibold text-slate-950">{new Intl.DateTimeFormat("en-US", { weekday: "long", month: "long", day: "numeric" }).format(now)}</p>
           </div>
           <div>
             <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-500">Summary</p>
-            <p className="mt-1 text-base font-semibold text-slate-950">{stats.approvedRestaurants} live • {stats.totalReviews} reviews • {stats.totalFavorites} favorites</p>
+            <p className="mt-1 text-sm font-semibold text-slate-950">{stats.approvedRestaurants} live • {stats.totalReviews} reviews • {stats.totalFavorites} favorites</p>
           </div>
         </div>
       </section>
@@ -130,20 +129,20 @@ export default async function OwnerPage() {
 
       <OwnerQuickActions />
 
-      <section id="reviews" className="rounded-xl border border-[#E5E7EB] bg-white p-6 shadow-none">
+      <section id="reviews" className="rounded-[20px] border border-[#E2E8F0] bg-white p-5 shadow-[0_4px_20px_rgba(15,23,42,0.04)] sm:p-6">
         <div className="flex items-end justify-between gap-4">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-orange-600">Customer feedback</p>
             <h2 className="mt-1 text-2xl font-semibold tracking-tight text-slate-950">Recent reviews</h2>
           </div>
-          <Badge variant="outline" className="rounded-full">{reviewCount} total</Badge>
+          <Badge variant="outline" className="rounded-full border-slate-200 bg-slate-50 px-3 py-1 text-slate-600">{reviewCount} total</Badge>
         </div>
-        <div className="mt-5 grid gap-3 md:grid-cols-2">
+        <div className="mt-5 grid gap-4 md:grid-cols-2">
           {recentReviews.map((review) => (
-            <article key={review.id} className="rounded-lg border border-slate-200 bg-[#F9FAFB] p-4">
+            <article key={review.id} className="rounded-2xl border border-slate-200 bg-[#F8FAFC] p-4">
               <div className="flex items-center justify-between gap-3">
                 <p className="font-semibold text-slate-950">{review.guestName ?? review.user?.name ?? "Anonymous diner"}</p>
-                <span className="text-sm font-semibold text-amber-600">{review.rating}/5</span>
+                <span className="rounded-full bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-700">{review.rating}/5</span>
               </div>
               <p className="mt-1 text-xs text-slate-500">{review.restaurant.name}</p>
               <p className="mt-3 text-sm leading-6 text-slate-600">{review.comment}</p>
